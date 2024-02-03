@@ -14,6 +14,8 @@ Deno.serve(async (req) => {
       url: url,
     };
 
+    console.log("body", body);
+
     if (body?.prompts) {
       requestBody["element_prompts"] = body.prompts;
     } else if (body?.selectors) {
@@ -23,6 +25,7 @@ Deno.serve(async (req) => {
     } else {
       throw new Error("Missing prompts or selectors");
     }
+
 
     const scrapeResp = await fetchJigsawStack(
       body?.prompts ? "/ai/scrape" : "/scrape",
