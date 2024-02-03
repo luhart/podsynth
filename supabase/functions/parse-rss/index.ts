@@ -2,8 +2,8 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 import { parseFeed } from "https://deno.land/x/rss/mod.ts";
+import { createSummary } from "../_utils/ai.ts";
 
-console.log("Hello from Functions!");
 
 Deno.serve(async (req) => {
   const { url } = await req.json();
@@ -16,6 +16,7 @@ Deno.serve(async (req) => {
     });
   }
 
+  let titles: string[] = [];
   try {
     const response = await fetch(url);
     const xml = await response.text();
@@ -27,10 +28,7 @@ Deno.serve(async (req) => {
     );
 
     // @ts-ignore: we just filtered out the empty titles
-    const titles = filteredEntries.map((entry) => entry.title.value);
-    return new Response(JSON.stringify({ titles }), {
-      headers: { "Content-Type": "application/json" },
-    });
+    titles = filteredEntries.map((entry) => entry.title.value);
   } catch (error) {
     return new Response(JSON.stringify({ error: "error parsing rss" }), {
       headers: { "Content-Type": "application/json" },
@@ -38,19 +36,31 @@ Deno.serve(async (req) => {
     });
   }
 
-  // return new Response(JSON.stringify({}), {
-  //   headers: { "Content-Type": "application/json" },
-  // });
+  if (titles.length === 0) {
+    return new Response(JSON.stringify({ error: "No titles found" }), {
+      headers: { "Content-Type": "application/json" },
+      status: 400,
+    });
+  }
+
+  let summary: string | null = null;
+
+  try {
+    const inputText = titles.join("\n");
+    const PROMT_INST = `Create a news reading from the following:\n\n${inputText}`;
+    summary = await createSummary(PROMT_INST);
+  } catch (error) {
+    console.log("Error creating summary", error);
+    return new Response(JSON.stringify({ error: "Error creating summary" }), {
+      headers: { "Content-Type": "application/json" },
+      status: 500,
+    });
+  }
+
+  // const summary = await createSummary("test")
+
+  return new Response(JSON.stringify({ summary }), {
+    headers: { "Content-Type": "application/json" },
+  });
+
 });
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/parse-rss' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
-
-*/
