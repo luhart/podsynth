@@ -1,17 +1,14 @@
 {
   "folders": [
     {
-      "name": "project-root",
+      "name": "podsynth-root",
       "path": "./"
-    },
-    {
-      "name": "supabase-functions",
-      "path": "supabase/functions"
     }
   ],
   "settings": {
-    "files.exclude": {
-      "supabase/functions/": true
-    }
+    "deno.enablePaths": [
+      "supabase/functions"
+    ]
+    
   }
 }
