@@ -16,7 +16,7 @@ interface SamplesProps {
 
 export function Samples({ samples }: { samples: Sample[] }) {
   return (
-    <div className="flex flex-row gap-4 justify-start items-center">
+    <div className="flex flex-row gap-2 justify-start items-center flex-wrap">
       {samples.map((sample, index) => (
         <SampleItem sample={sample} key={index} />
       ))}
@@ -41,9 +41,9 @@ function SampleItem({ sample }: { sample: Sample }) {
       }
     }}>
       {isPlaying ? (
-        <Square className="h-3 w-3 mr-2" strokeWidth={0} fill="rgb(156 163 175)" />
+        <Square className="h-4 w-4 mr-2" strokeWidth={0} fill="rgb(156 163 175)" />
       ) : (
-        <Play className="w-3 h-3 mr-2" strokeWidth={0} fill="rgb(156 163 175)"/>
+        <Play className="w-4 h-4 mr-2" strokeWidth={0} fill="rgb(156 163 175)"/>
       )}
       {sample.name}
     </Button>
