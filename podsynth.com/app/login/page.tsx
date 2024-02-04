@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { login, signup } from "./actions";
 import { Button } from "@/components/ui/button";
 
+
 export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-start sm:pt-36 pt-8 min-h-screen w-full">
