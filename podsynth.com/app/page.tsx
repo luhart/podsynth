@@ -1,8 +1,18 @@
 import HeroText from "@/components/hero-text";
+import { Samples } from "@/components/samples";
 import { Button } from "@/components/ui/button";
 import { AudioLines, Play } from "lucide-react";
 
-const samples = ["Today in Technology", "This Week in Agriculture"];
+const samples = [
+  {
+    name: "This week in agriculture",
+    url: "/ag.mp3",
+  },
+  {
+    name: "Technology Today",
+    url: "/tech.mp3",
+  },
+];
 
 export default function Home() {
   return (
@@ -25,14 +35,7 @@ export default function Home() {
           <div className="text-xl font-bold">Samples</div>
         </div>
 
-        <div className="flex flex-row gap-4 justify-start items-center">
-          {samples.map((sample, index) => (
-            <Button variant={"outline"} key={index}>
-              <Play className="w-3 h-3 text-gray-600 mr-2 "/>
-              {sample}
-            </Button>
-          ))}
-        </div>
+        <Samples samples={samples} />
       </div>
     </main>
   );
