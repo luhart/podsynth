@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { AudioLines, Play } from "lucide-react";
 
 const samples = [
-  {
-    name: "This week in agriculture",
-    url: "/ag.mp3",
-  },
+  // {
+  //   name: "This week in agriculture",
+  //   url: "/ag.mp3",
+  // },
   {
     name: "Technology Today",
     url: "/tech.mp3",
