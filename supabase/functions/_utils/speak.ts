@@ -27,10 +27,30 @@ export const createSpeach = async (text: string) => {
   });
 
   if (!res.ok) {
-    const errorObj = await res.json();
-    console.error("Error response from ElevenLabs", errorObj);
-    throw new Error(errorObj?.message || "Error generating audio");
+    throw new Error("Error generating audio");
   }
 
-  return res.json();
+  // Headers {
+  //   "access-control-allow-headers": "*",
+  //   "access-control-allow-methods": "POST, OPTIONS, DELETE, GET, PUT",
+  //   "access-control-allow-origin": "*",
+  //   "access-control-expose-headers": "request-id, history-item-id, tts-latency-ms",
+  //   "access-control-max-age": "600",
+  //   "alt-svc": 'h3=":443"; ma=2592000,h3-29=":443"; ma=2592000',
+  //   "content-length": "24241",
+  //   "content-type": "audio/mpeg",
+  //   date: "Sun, 04 Feb 2024 01:50:48 GMT",
+  //   "history-item-id": "NsBYdXptBNxQRzzjWSNa",
+  //   "request-id": "gIRsJ7vx9RrwAOUgmcai",
+  //   server: "uvicorn",
+  //   "tts-latency-ms": "1148",
+  //   via: "1.1 google"
+  // }
+
+  // return history-item-id, request-id, and date
+  return {
+    historyItemId: res.headers.get("history-item-id"),
+    requestId: res.headers.get("request-id"),
+    date: res.headers.get("date"),
+  };
 };
