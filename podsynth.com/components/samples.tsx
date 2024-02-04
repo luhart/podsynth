@@ -24,7 +24,46 @@ export function Samples({ samples }: { samples: Sample[] }) {
   );
 }
 
+
 function SampleItem({ sample }: { sample: Sample }) {
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleTogglePlayback = () => {
+    if (!audioElement || !sample.url) {
+      console.warn("Unable to find audio source.");
+      return;
+    }
+    
+    setIsPlaying((prevValue) => {
+      if (prevValue) {
+        audioElement.pause();
+      } else {
+        audioElement.load();
+        audioElement.play();
+      }
+      
+      return !prevValue;
+    });
+  };
+
+  return (
+    <div>
+      <Button variant={"outline"} onClick={handleTogglePlayback}>
+        {isPlaying ? (
+          <Square className="h-4 w-4 mr-2" strokeWidth={0} fill="rgb(156 163 175)" />
+        ) : (
+          <Play className="w-4 h-4 mr-2" strokeWidth={0} fill="rgb(156 163 175)"/>
+        )}
+        {sample.name}
+      </Button>
+      <audio ref={(element) => setAudioElement(element)} src={sample.url} preload="none"></audio>
+    </div>
+  );
+}
+
+
+function SampleItemOld({ sample }: { sample: Sample }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [play, { stop }] = useSound(sample.url, {
     onplay: () => setIsPlaying(true),
