@@ -1,7 +1,7 @@
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
-import { parseFeed } from "https://deno.land/x/rss/mod.ts";
+import { parseFeed } from "https://deno.land/x/rss@1.0.0/mod.ts";
 import { createSummary } from "../_utils/ai.ts";
 
 
@@ -30,6 +30,7 @@ Deno.serve(async (req) => {
     // @ts-ignore: we just filtered out the empty titles
     titles = filteredEntries.map((entry) => entry.title.value);
   } catch (error) {
+    console.log("Error parsing rss", error);
     return new Response(JSON.stringify({ error: "error parsing rss" }), {
       headers: { "Content-Type": "application/json" },
       status: 400,

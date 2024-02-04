@@ -26,7 +26,6 @@ Deno.serve(async (req) => {
       throw new Error("Missing prompts or selectors");
     }
 
-
     const scrapeResp = await fetchJigsawStack(
       body?.prompts ? "/ai/scrape" : "/scrape",
       requestBody
