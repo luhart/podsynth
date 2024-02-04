@@ -51,6 +51,5 @@ export const createSpeach = async (text: string) => {
   return {
     historyItemId: res.headers.get("history-item-id"),
     requestId: res.headers.get("request-id"),
-    date: res.headers.get("date"),
   };
 };
