@@ -31,8 +31,10 @@ Deno.serve(async (req) => {
       requestBody
     );
 
+    // deno-lint-ignore no-explicit-any
     const mappedData = scrapeResp.data.map((d: any) => ({
       selector: d.selector,
+      // deno-lint-ignore no-explicit-any
       results: d.results.map((r: any) => r.text),
     }));
 

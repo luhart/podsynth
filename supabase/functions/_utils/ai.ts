@@ -22,10 +22,9 @@ export async function createSummary(text: string) {
     messages: [
       {
         role: "system",
-        content: "You are a writter for the news. You create readable scripts that will be read by Greg live on his technology segment."
+        content: "You are a writter for the news. You create readable scripts that will be read by Greg live on his radio segment."
       },
       { role: "user", content: text }
-      
     ],
   })
   console.log("full completion", completion);
