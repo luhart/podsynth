@@ -3,7 +3,7 @@
 import { Button } from "./ui/button";
 import { Play, Square } from "lucide-react";
 import { useState } from "react";
-import { useSound } from "use-sound";
+import useSound from "use-sound";
 
 type Sample = {
   name: string;
