@@ -30,9 +30,9 @@ export default function Home() {
         <div className="text-gray-600">
           Creating a pod is easy - enter a url, a cadence, press a button, and voila! Now you, too, can listen to summaries of techmeme while brushing your teeth.
         </div>
-        <div className="text-gray-600">
+        {/* <div className="text-gray-600">
           Sign up to experience pure LLM bliss.
-        </div>
+        </div> */}
         <div>
           <Button variant="default" size="lg">
             Sign up
