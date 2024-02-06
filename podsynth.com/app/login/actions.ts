@@ -1,49 +1,32 @@
-'use server'
+"use server";
 
-import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { createClient } from '@/utils/supabase/actions'
+import { createClient } from "@/utils/supabase/actions";
 
-export async function login(formData: FormData) {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
+export async function login(prevState: {message: string}, formData: FormData) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = String(formData.get("email"));
+  function isValidEmail(email: string) {
+    var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  if (!isValidEmail(email)) {
+    return { message: "Please enter a valid email" };
+  }
+  const password = String(formData.get("password"));
+
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    redirect('/error')
+    return { message: 'Invalid email or password' };
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
-}
-
-export async function signup(formData: FormData) {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
-
-  const { error } = await supabase.auth.signUp(data)
-
-  if (error) {
-    redirect('/error')
-  }
-
-  revalidatePath('/', 'layout')
-  redirect('/')
+  revalidatePath("/", "layout");
+  redirect("/");
 }

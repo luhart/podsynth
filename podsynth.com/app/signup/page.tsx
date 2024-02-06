@@ -56,7 +56,7 @@ export default function SignupPage() {
       </form>
       <div className="mt-4">
         <Button variant={"link"} asChild>
-          <Link href="/login">Have an account? Log in!</Link>
+          <Link href="/login">Have an account? Log in.</Link>
         </Button>
       </div>
     </div>

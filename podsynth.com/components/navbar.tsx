@@ -1,6 +1,6 @@
-import s from "./Navbar.module.css";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
+import { createClient as createClientActions } from "@/utils/supabase/actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ export default async function Navbar() {
     "use server";
 
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClientActions(cookieStore);
 
     const { error } = await supabase.auth.signOut();
 
@@ -24,9 +24,10 @@ export default async function Navbar() {
         )}&error_description=${encodeURI("You could not be signed out.")}`
       );
     }
-
-    return redirect("/signin");
+    
+    return redirect("/login");
   };
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -41,21 +42,17 @@ export default async function Navbar() {
           Podsynth
         </Link>
         {user ? (
-          <>
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-            >
+          <div className="flex flex-row items-center gap-2">
+            <Button variant="ghost" size="sm" asChild>
               <Link href="/account">Account</Link>
             </Button>
             <form action={handleSignOut}>
-              <Button size="sm">Sign out</Button>
+              <Button size="sm" type="submit">Sign out</Button>
             </form>
-          </>
+          </div>
         ) : (
           <Button variant="outline" size="sm" asChild>
-            <Link href="/signin">Sign in</Link>
+            <Link href="/login">Log in</Link>
           </Button>
         )}
       </div>
