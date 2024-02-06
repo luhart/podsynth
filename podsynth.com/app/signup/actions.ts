@@ -1,10 +1,9 @@
 "use server";
-
-import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/actions";
+import { getURL } from "@/utils/helpers";
 
 export async function signup(prevState: any, formData: FormData) {
   const cookieStore = cookies();
@@ -31,12 +30,18 @@ export async function signup(prevState: any, formData: FormData) {
     return { message: "Password must be at least 8 characters" };
   }
 
+  console.log(`${getURL()}auth/callback`)
+
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
+    options: {
+      emailRedirectTo: `${getURL()}auth/callback`
+    }
   });
 
   if (error) {
+    console.error("Error signing up:", error);
     return {
       message: "Error signing you up. Contact team@platdrop.com for help.",
     };
