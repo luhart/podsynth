@@ -30,8 +30,6 @@ export async function signup(prevState: any, formData: FormData) {
     return { message: "Password must be at least 8 characters" };
   }
 
-  console.log(`${getURL()}auth/callback`)
-
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
