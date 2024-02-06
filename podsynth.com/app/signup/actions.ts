@@ -1,0 +1,48 @@
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+
+import { createClient } from '@/utils/supabase/actions'
+
+
+export async function signup(formData: FormData) {
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+
+  const email = String(formData.get('email'));
+  function isValidEmail(email: string) {
+    var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  }
+
+  if (!isValidEmail(email)) {
+    return { message: 'Please enter a valid email' };
+  }
+
+  const password = String(formData.get('password'));
+  const confirmPassword = String(formData.get('confirm_password'));
+
+  if (password !== confirmPassword) {
+    return { message: 'Passwords do not match' };
+  }
+
+  if (password.length < 8) {
+    return { message: 'Password must be at least 8 characters' };
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+  })
+
+  if (error) {
+    return {
+      message: 'Error signing you up. Contact team@platdrop.com for help.'
+    };
+  }
+
+  revalidatePath('/', 'layout')
+  redirect('/')
+}

@@ -2,6 +2,7 @@ import HeroText from "@/components/hero-text";
 import { Samples } from "@/components/samples";
 import { Button } from "@/components/ui/button";
 import { AudioLines, Play } from "lucide-react";
+import Link from "next/link";
 
 const samples = [
   // {
@@ -17,25 +18,25 @@ const samples = [
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-start">
-      <div className="flex flex-col justify-start max-w-xl min-w-0 w-full p-4 gap-4 pt-12">
+      <div className="flex flex-col justify-start max-w-xl w-full p-4 gap-4 pt-12">
         {/* <HeroText /> */}
         <h1
-          className={`sm:text-2xl text-2xl font-bold flex-1 w-full transition-all duration-500 sm:leading-10 leading-8`}
+          className={`text-2xl font-bold w-full`}
         >
           Turn any feed into a recurring audio digest.
         </h1>
         <div className="text-gray-600">
-          Podsynth generates audio summaries straight from your favorite RSS feeds. I think we&apos;re gonna call these &apos;pods&apos;.
+          Podsynth generates audio summaries straight from your favorite RSS feeds. I think we&apos;ll call these &apos;pods&apos;.
         </div>
         <div className="text-gray-600">
           Creating a pod is easy - enter a url, a cadence, press a button, and voila! Now you, too, can listen to summaries of techmeme while brushing your teeth.
         </div>
         {/* <div className="text-gray-600">
-          Sign up to experience pure LLM bliss.
+          Sign up to experience pure bliss of latent space.
         </div> */}
-        <div>
-          <Button variant="default" size="lg">
-            Sign up
+        <div className="mt-2">
+          <Button variant="default" size="lg" asChild>
+            <Link href="/signup">Sign up</Link>
           </Button>
         </div>
       </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import Navbar from "@/components/navbar";
 
 
 const fontSans = FontSans({
@@ -28,14 +28,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <nav className="w-full p-4 text-primary flex flex-row justify-center">
-          <div className="flex justify-between items-center max-w-xl w-full p-4 border rounded-xl bg-muted">
-            <h1 className="text-sm font-medium">Podsynth</h1>
-            <Button variant="link" size="sm">
-              Sign in
-            </Button> 
-          </div>
-        </nav>
+        <Navbar />
         {children}
       </body>
     </html>
