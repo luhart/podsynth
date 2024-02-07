@@ -33,11 +33,11 @@ export default async function Navbar() {
   } = await supabase.auth.getUser();
 
   return (
-    <nav className="w-full p-4 text-primary flex flex-row justify-center">
+    <nav className="w-full px-4 text-primary flex flex-row justify-center">
       <a href="#skip" className="sr-only focus:not-sr-only">
         Skip to content
       </a>
-      <div className="flex justify-between items-center max-w-xl w-full px-4 py-3 rounded-lg">
+      <div className="flex justify-between items-center py-4 max-w-xl w-full px-4">
         <Link href="/" className="text-sm font-medium">
           Podsynth
         </Link>
