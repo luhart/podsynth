@@ -5,7 +5,7 @@ import { Samples } from "@/components/samples";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/utils/supabase/server";
-import { AudioLines, Play, Plus } from "lucide-react";
+import { AudioLines, Mail, Play, Plus } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
@@ -42,7 +42,7 @@ export default async function Home() {
 
   if (!user) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-start">
+      <main className="flex min-h-screen flex-col items-center justify-between">
         <div className="flex flex-col justify-start max-w-xl w-full p-4 gap-4 pt-12">
           {/* <HeroText /> */}
           <h1 className={`text-2xl font-bold w-full`}>
@@ -65,15 +65,31 @@ export default async function Home() {
               <Link href="/signup">Sign up</Link>
             </Button>
           </div>
-        </div>
         <SampleSection />
+        </div>
+        <Footer /> 
       </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start border-t">
+    <main className="flex min-h-screen flex-col items-center justify-between border-t">
       <Pods />
+      <Footer /> 
     </main>
+  );
+}
+
+
+const Footer = () => {
+  return (
+    <footer className="flex flex-row justify-center border-t w-full">
+        <div className="max-w-2xl w-full flex justify-center border-l border-r p-4">
+          <div className="text-gray-600 flex items-center">
+            <Mail className="w-4 h-4 mr-2" />
+            team@podsynth.com
+          </div>
+        </div>
+      </footer>
   );
 }
