@@ -12,7 +12,7 @@ export default function NewPod() {
     <div className="flex flex-col justify-start w-full gap-4">
       <label htmlFor="source" className="flex flex-col gap-1">
         <span className="text-gray-600 text-sm font-medium block">
-          Feed source
+          Feed source (must be rss for now)
         </span>
         <Input
           id="source"

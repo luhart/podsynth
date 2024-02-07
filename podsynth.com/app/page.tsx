@@ -1,6 +1,7 @@
 import NewPod from "@/components/NewPod";
 import Pods from "@/components/Pods";
 import PodsTable from "@/components/Pods";
+import { Footer } from "@/components/footer";
 import { Samples } from "@/components/samples";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,19 +78,5 @@ export default async function Home() {
       <Pods />
       <Footer /> 
     </main>
-  );
-}
-
-
-const Footer = () => {
-  return (
-    <footer className="flex flex-row justify-center border-t w-full">
-        <div className="max-w-2xl w-full flex justify-center border-l border-r p-4">
-          <div className="text-gray-600 flex items-center">
-            <Mail className="w-4 h-4 mr-2" />
-            team@podsynth.com
-          </div>
-        </div>
-      </footer>
   );
 }
