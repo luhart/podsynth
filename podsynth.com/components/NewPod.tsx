@@ -3,24 +3,17 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import Link from "next/link";
 
 export default function NewPod() {
   const [source, setSource] = useState<string>("");
   // const [cadence, setCadence] = useState<string>("");
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("submitting", source);
-  }
-
-  
-
-
   return (
     <div className="flex flex-col justify-start w-full gap-4">
       <label htmlFor="source" className="flex flex-col gap-1">
         <span className="text-gray-600 text-sm font-medium block">
-          Feed source (must be rss for now)
+          Feed source (RSS only for now)
         </span>
         <Input
           id="source"
@@ -60,8 +53,8 @@ export default function NewPod() {
           />
         </label> */}
 
-      <Button variant="default" className="mt-2">
-        Generate
+      <Button variant="default" className="mt-2" asChild>
+        <Link href={`/create/${encodeURIComponent(source)}`}>Parse RSS</Link>
       </Button>
     </div>
   );
