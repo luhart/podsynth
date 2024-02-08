@@ -6,7 +6,15 @@ import { Input } from "./ui/input";
 
 export default function NewPod() {
   const [source, setSource] = useState<string>("");
-  const [cadence, setCadence] = useState<string>("");
+  // const [cadence, setCadence] = useState<string>("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("submitting", source);
+  }
+
+  
+
 
   return (
     <div className="flex flex-col justify-start w-full gap-4">
@@ -27,7 +35,7 @@ export default function NewPod() {
           required
         />
       </label>
-      <label htmlFor="cadence" className="flex flex-col gap-1">
+      {/* <label htmlFor="cadence" className="flex flex-col gap-1">
         <span className="text-gray-600 text-sm font-medium block">Cadence</span>
         <Input
           id="cadence"
@@ -41,7 +49,7 @@ export default function NewPod() {
           }}
           required
         />
-      </label>
+      </label> */}
       {/* <label htmlFor="public" className="flex flex-col gap-1">
           <span className="text-gray-600 text-sm font-medium block">Public</span>
           <Input

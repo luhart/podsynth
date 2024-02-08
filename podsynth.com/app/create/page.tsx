@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function CreatePodPage() {
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-start border-t">
       <div className="max-w-2xl w-full border-l border-r border-t-0 min-h-screen px-2 flex flex-col items-center">
@@ -29,7 +30,10 @@ export default function CreatePodPage() {
             <PopoverContent align="start">
               <div className="text-gray-600 text-sm flex flex-col gap-2">
                 <p>
-                  <strong>Caveat 1:</strong> We currently only ingest article
+                  <strong>Caveat 1:</strong> Things may break.
+                </p>
+                <p>
+                  <strong>Caveat 2:</strong> We currently only ingest article
                   titles and descriptions. Meaning articles like{" "}
                   <a
                     href="https://www.buzzfeed.com/kristenharris1/gross-tv-show-bts-facts"
@@ -42,12 +46,9 @@ export default function CreatePodPage() {
                   will likely give you garbage or funny outputs.
                 </p>
                 <p>
-                  <strong>Caveat 2:</strong> I just started working on this. If
+                  <strong>Caveat 3:</strong> I just started working on this. If
                   you run into any issues or have ideas, please do{" "}
-                  <a
-                    href="mailto:luke@podsynth.com"
-                    className="underline"
-                  >
+                  <a href="mailto:luke@podsynth.com" className="underline">
                     email
                   </a>{" "}
                   or{" "}
@@ -55,15 +56,13 @@ export default function CreatePodPage() {
                     href="https://twitter.com/lukejhartman"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline" 
+                    className="underline"
                   >
                     DM
                   </a>{" "}
                   me.
                 </p>
-                <p>
-                  <strong>Caveat 3:</strong>Things might break.
-                </p>
+                <p>Also, social features on the way</p>
               </div>
             </PopoverContent>
           </Popover>
