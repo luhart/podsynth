@@ -21,8 +21,8 @@ export default function NewPod() {
           type="url"
           value={source}
           onChange={(e) => {
-            e.preventDefault()
-            setSource(e.target.value)
+            e.preventDefault();
+            setSource(e.target.value);
           }}
           placeholder="https://www.techmeme.com/feed.xml"
           required
