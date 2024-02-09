@@ -56,7 +56,7 @@ export default async function CreateLayout({
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start border-t bg-gray-50">
-      <div className="max-w-2xl w-full border-l border-r border-t-0 min-h-screen px-2 flex flex-col items-center">
+      <div className="max-w-2xl w-full border-l border-r border-t-0 min-h-screen px-4 flex flex-col items-center">
         <div className="w-full max-w-sm flex flex-row justify-between sm:mt-24 mt-12">
           <BackButton />
           <Popover>
@@ -66,25 +66,28 @@ export default async function CreateLayout({
               </Button>
             </PopoverTrigger>
             <PopoverContent align="start">
-              <div className="text-gray-600 text-sm flex flex-col gap-2">
-                <p>Things may break.</p>
-                <p>
+              <div className="text-gray-700 text-sm divide-y">
+                <p className="mb-2">
                   We currently only ingest article titles and descriptions.
                   Meaning articles like{" "}
                   <a
                     href="https://www.buzzfeed.com/kristenharris1/gross-tv-show-bts-facts"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline"
+                    className="underline font-medium text-blue-500"
                   >
                     this
                   </a>{" "}
                   will give you bad outputs.
                 </p>
-                <p>
+                <p className="py-2">
+                  Cadence scheduling is done by LLM converting your input to cron - it might not be perfect. We only support one pod generation per day.
+                </p>
+                <p className="py-2">Things may break.</p>
+                <p className="py-2">
                   I just started working on this. If you run into any issues or
                   have ideas, please do{" "}
-                  <a href="mailto:luke@podsynth.com" className="underline">
+                  <a href="mailto:luke@podsynth.com" className="underline font-medium text-blue-500">
                     email
                   </a>{" "}
                   or{" "}
@@ -92,13 +95,13 @@ export default async function CreateLayout({
                     href="https://twitter.com/lukejhartman"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="underline"
+                    className="underline font-medium text-blue-500"
                   >
                     DM
                   </a>{" "}
                   me.
                 </p>
-                <p>social features on the way</p>
+                <p className="pt-2">social features on the way</p>
               </div>
             </PopoverContent>
           </Popover>

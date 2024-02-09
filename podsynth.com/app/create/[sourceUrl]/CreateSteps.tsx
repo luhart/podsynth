@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Item } from "./types";
+import { Loader } from "lucide-react";
 
 interface CreateStepsProps {
   sourceUrl: string;
@@ -20,8 +21,11 @@ export default function CreateSteps({
   const [step, setStep] = useState<Step>("check");
   const [cadenceInput, setCadenceInput] = useState<string>("");
   const [cadenceCron, setCadenceCron] = useState<string>("");
+  const [checkingCadence, setCheckingCadence] = useState<boolean>(false);
+  const [cadenceError, setCadenceError] = useState<string>("");
 
   async function onSchedule() {
+    setCheckingCadence(true);
     const response = await fetch("/api/human-to-cron", {
       method: "POST",
       headers: {
@@ -32,9 +36,28 @@ export default function CreateSteps({
       }),
     });
 
-    const data = await response.text();
-    console.log(data);
-    setCadenceCron(data);
+    // const dataText = await response.text();
+    // console.log(dataText);
+    const dataText = await response.text();
+    console.log("data", dataText);
+
+    try {
+      const data = JSON.parse(dataText);
+      if (data.pass === true) {
+        setCadenceCron(data.cron);
+        setCheckingCadence(false);
+        // setStep("confirm");
+      } else {
+        setCadenceError(data.error);
+        setCadenceError(data.message);
+        setCheckingCadence(false);
+      }
+    } catch (error) {
+      console.error("Error parsing JSON", error);
+      setCadenceError("Error with cadence input. Please try again.");
+      setCheckingCadence(false);
+    }
+    setCheckingCadence(false);
   }
 
   if (step === "check") {
@@ -55,16 +78,15 @@ export default function CreateSteps({
               key={index}
               className="border px-2 py-2.5 rounded-sm bg-gray-100"
             >
-              <div className="text-sm font-medium overflow-hidden whitespace-nowrap overflow-ellipsis">
+              <div className="text-sm font-medium overflow-hidden line-clamp-1">
                 {item.title}
               </div>
-              <div className="text-xs mt-1 text-gray-500">
+              <div className="text-xs mt-1 text-gray-500 line-clamp-3 overflow-hidden">
                 {item.description}
               </div>
             </div>
           ))}
         </div>
-
         <Button variant="default" size="lg" onClick={() => setStep("schedule")}>
           Looks good!
         </Button>
@@ -76,7 +98,7 @@ export default function CreateSteps({
     return (
       <>
         <div className="text-xl font-bold">Schedule your pod</div>
-        <div className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4">
           <label htmlFor="cadence" className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm font-medium block">
               Cadence
@@ -102,14 +124,24 @@ export default function CreateSteps({
               <code className="bg-gray-100 p-2 rounded-md">{cadenceCron}</code>
             </div>
           )}
+          {cadenceError && (
+            <div className="flex flex-row gap-2 items-center justify-center w-full border border-red-400 rounded p-2">
+              <div className="text-red-500 text-sm">{cadenceError}</div>
+            </div>
+          )}
           <Button
             variant="default"
             size="lg"
-            onClick={() => onSchedule()}
+            type="submit"
+            disabled={checkingCadence || (cadenceInput === "")}
+            onClick={onSchedule}
           >
             Next
+            {checkingCadence && (
+              <Loader className="ml-2 h-4 w-4 animate-spin" />
+            )}
           </Button>
-        </div>
+        </form>
       </>
     );
   }

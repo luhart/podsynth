@@ -8,9 +8,31 @@ const openai = new OpenAI({
   // dangerouslyAllowBrowser: true,
 });
 
+export interface RequestBody {
+  cadence: string;
+}
+
+function isParseableJSON(str: string) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+type ResponseType =
+  | {
+      pass: true;
+      cron: string;
+    }
+  | {
+      pass: false;
+      message: string;
+    };
+
 export async function POST(request: Request) {
-  const r = await request.json();
-  const { cadence } = r;
+  const { cadence } = (await request.json()) as RequestBody;
 
   if (!cadence) {
     return new Response("Missing cadence", { status: 400 });
@@ -23,7 +45,7 @@ export async function POST(request: Request) {
       {
         role: "system",
         content:
-          "You are a cron translator. You create cron expressions from human input that will be used to schedule tasks. You must take the human input and convert it to its cron expression. If you can't convert it, you must return an error message. Return an error if the cron is more than once a day saying 'Can't schedule more than once per day'.",
+          "You are a cron translator. You create cron expressions from human input that will be used to schedule tasks. You must take the human input and convert it to its cron expression. If you can't convert it, you must return an error message. Return an error if the cron is more than once per day saying 'Can't schedule more than once per day'.",
       },
       {
         role: "user",
@@ -31,7 +53,7 @@ export async function POST(request: Request) {
       },
       {
         role: "system",
-        content: `Respond in json this type.
+        content: `Respond with no backtick formatting, only in parseable json with type:
   type Response = {
   pass: true;
   cron: string;
@@ -45,5 +67,16 @@ export async function POST(request: Request) {
   });
 
   console.log(completion.choices[0].message);
-  return new Response(completion.choices[0].message.content, { status: 200 });
+  const result = completion.choices[0].message?.content?.trim() || "";
+
+  if (!result) throw new Error("No result from OpenAI");
+
+  const response = JSON.parse(result) as ResponseType;
+
+  return new Response(JSON.stringify(response), {
+    status: 200,
+    headers: {
+      "content-type": "application/json",
+    },
+  });
 }
