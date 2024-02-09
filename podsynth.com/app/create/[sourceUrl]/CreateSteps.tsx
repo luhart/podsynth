@@ -39,7 +39,6 @@ export default function CreateSteps({
     // const dataText = await response.text();
     // console.log(dataText);
     const dataText = await response.text();
-    console.log("data", dataText);
 
     try {
       const data = JSON.parse(dataText);
@@ -116,14 +115,14 @@ export default function CreateSteps({
               required
             />
           </label>
-          {cadenceCron && (
+          {/* {cadenceCron && (
             <div className="flex flex-col gap-1">
               <span className="text-gray-600 text-sm font-medium block">
                 Cron
               </span>
               <code className="bg-gray-100 p-2 rounded-md">{cadenceCron}</code>
             </div>
-          )}
+          )} */}
           {cadenceError && (
             <div className="flex flex-row gap-2 items-center justify-center w-full border border-red-400 rounded p-2">
               <div className="text-red-500 text-sm">{cadenceError}</div>
@@ -136,12 +135,31 @@ export default function CreateSteps({
             disabled={checkingCadence || (cadenceInput === "")}
             onClick={onSchedule}
           >
-            Next
+            Schedule pod
             {checkingCadence && (
               <Loader className="ml-2 h-4 w-4 animate-spin" />
             )}
           </Button>
         </form>
+      </>
+    );
+  }
+
+  if (step === "confirm") {
+    return (
+      <>
+        <div className="text-xl font-bold">Confirm your pod</div>
+        <div className="flex flex-col gap-4">
+          <div className="text-sm font-medium text-gray-600">
+            {sourceUrl}
+          </div>
+          <div className="text-sm font-medium text-gray-600">
+            {cadenceCron}
+          </div>
+        </div>
+        <Button variant="default" size="lg" asChild>
+          <Link href="/create">Looks good!</Link>
+        </Button>
       </>
     );
   }
