@@ -74,7 +74,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between border-t">
+    <main className="flex min-h-screen flex-col items-center justify-between border-t bg-gray-50">
       <Pods />
       <Footer /> 
     </main>

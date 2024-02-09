@@ -55,7 +55,7 @@ export default async function CreateLayout({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start border-t">
+    <main className="flex min-h-screen flex-col items-center justify-start border-t bg-gray-50">
       <div className="max-w-2xl w-full border-l border-r border-t-0 min-h-screen px-2 flex flex-col items-center">
         <div className="w-full max-w-sm flex flex-row justify-between sm:mt-24 mt-12">
           <BackButton />
@@ -103,7 +103,7 @@ export default async function CreateLayout({
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex flex-col justify-start max-w-sm border w-full gap-4 sm:py-8 sm:px-6 py-5 px-4 rounded-lg mt-4">
+        <div className="flex flex-col justify-start bg-white max-w-sm border w-full gap-4 sm:py-8 sm:px-6 py-5 px-4 rounded-lg mt-4">
           {children}
         </div>
         <div className="max-w-sm py-8 ">

@@ -3,17 +3,13 @@ import Parser from "rss-parser";
 import { load } from "cheerio";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CreateSteps from "./CreateSteps";
+import { Item } from "./types";
 
 const parser = new Parser();
 
 
-interface Item {
-  title: string | undefined;
-  description: string;
-  pubDate: string | undefined;
-}
-
-export async function parseRssFeed(url: string) {
+async function parseRssFeed(url: string) {
   let feed;
   try {
     feed = await parser.parseURL(url);
@@ -72,28 +68,25 @@ export default async function Page({
 
   if (data.length < 1) {
     return (
-      <div className="flex flex-col justify-start max-w-sm border w-full gap-4 sm:py-8 sm:px-6 py-5 px-4 rounded-lg mt-4">
+      <>
         <div className="text-xl font-bold">Failed to parse source</div>
+        <div className="text-gray-600">
+          We couldn&apos;t parse the source. Please check the URL and try again.
+        </div>
+        <div className="text-gray-600">
+          If you need help finding a feed, try googling the name of the site and
+          &apos;RSS feed&apos;. If you still can&apos;t find it, try using 
+          this{" "}<a href="https://rss.app/new-rss-feed" className="underline">RSS generator</a>.
+        </div>
         <Button variant="default" size="lg" asChild>
           <Link href="/create">Go back</Link>
         </Button>
-      </div>
+      </>
     );
   }
 
   return (
-    <>
-      <div className="text-xl font-bold">I think it parses! Do me a favor and double check this sample.</div>
-      {data.slice(0,3).map((item, index) => (
-        <div key={index} className="border px-2 py-2.5 rounded-sm bg-gray-100">
-          <div className="text-sm font-medium overflow-hidden whitespace-nowrap overflow-ellipsis">{item.title}</div>
-          <div className="text-xs mt-1 text-gray-500">{item.description}</div>
-        </div>
-      ))}
-      <Button variant="default" size="lg" asChild>
-        <Link href="/create">Looks good!</Link>
-      </Button>
-    </>
+    <CreateSteps sourceUrl={decodedSourceUrl} previewItems={data} />
   );
 }
 
