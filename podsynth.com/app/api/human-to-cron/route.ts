@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       {
         role: "system",
         content:
-          "You are a cron translator. You create cron expressions from human input that will be used to schedule tasks. You must take the human input and convert it to it's cron expression. If you can't convert it, you must return an error message.",
+          "You are a cron translator. You create cron expressions from human input that will be used to schedule tasks. You must take the human input and convert it to its cron expression. If you can't convert it, you must return an error message. Return an error if the cron is more than once a day saying 'Can't schedule more than once per day'.",
       },
       {
         role: "user",
