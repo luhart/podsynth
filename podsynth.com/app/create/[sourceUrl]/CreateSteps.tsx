@@ -43,9 +43,8 @@ export default function CreateSteps({
     try {
       const data = JSON.parse(dataText);
       if (data.pass === true) {
-        setCadenceCron(data.cron);
         setCheckingCadence(false);
-        // setStep("confirm");
+        
       } else {
         setCadenceError(data.error);
         setCadenceError(data.message);
