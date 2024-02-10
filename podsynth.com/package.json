@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-types": "supabase gen types typescript --project-id qodxfnilxbeujlpacnti --schema public > types_db.ts && cp types_db.ts ../supabase/functions/_utils/types_db.ts"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",
