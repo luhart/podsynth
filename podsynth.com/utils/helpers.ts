@@ -1,3 +1,9 @@
+import { isValidCron as isValidCronStr } from 'cron-validator'
+
+
+
+
+
 export const getURL = () => {
   let url =
     process?.env?.NEXT_PUBLIC_SITE_URL ?? // Set this to your site URL in production env.
@@ -10,7 +16,6 @@ export const getURL = () => {
   return url;
 };
 
-export const isValidCron = (cron: string) => {
-  const cronRegex = /^((\*|([0-9]{1,2}(-[0-9]{1,2})?))(\/[0-9]{1,2})? ?){5}$/;
-  return cronRegex.test(cron);
-}
+export const isValidCron = (cronStr: string): boolean => {
+  return isValidCronStr(cronStr);
+};

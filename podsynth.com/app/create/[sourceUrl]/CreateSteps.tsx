@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Item } from "./types";
 import { Loader } from "lucide-react";
 import { isValidCron } from "@/utils/helpers";
+import { createPod } from "@/utils/create-pod";
 
 interface CreateStepsProps {
   sourceUrl: string;
@@ -24,8 +25,17 @@ export default function CreateSteps({
   const [creatingPod, setCreatingPod] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
+  const podName =
+    sourceUrl
+      .split("/")[2]
+      .split(".")
+      .slice(0, -1)
+      .join("")
+      .replace("www", "") || "";
+
   async function onSchedule() {
     setCreatingPod(true);
+    setErrorMsg("");
     const response = await fetch("/api/human-to-cron", {
       method: "POST",
       headers: {
@@ -50,6 +60,8 @@ export default function CreateSteps({
           setCreatingPod(false);
           return;
         }
+        // const res = await createPod({ sourceUrl, title: "" });
+
         setCreatingPod(false);
       } else {
         setErrorMsg(data.error);
@@ -69,7 +81,7 @@ export default function CreateSteps({
       <>
         <div>
           <div className="text-sm font-medium mb-1 text-gray-500">
-            {sourceUrl}
+            {podName}
           </div>
           <div className="text-xl font-bold">
             I think it parses! Do me a favor and double check this sample:
@@ -101,11 +113,18 @@ export default function CreateSteps({
   if (step === "schedule") {
     return (
       <>
-        <div className="text-xl font-bold">Schedule and create pod</div>
+        <div>
+          <div className="text-sm font-medium mb-1 text-gray-500">
+            {podName}
+          </div>
+          <div className="text-xl font-bold">Schedule and create pod</div>
+        </div>
+
         <form className="flex flex-col gap-4">
           <label htmlFor="cadence" className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm font-medium block">
-              Cadence<span className="text-gray-600 align-top">*</span> <span className="text-xs">(1 per day limit)</span>
+              Cadence<span className="text-gray-600 align-top">*</span>{" "}
+              <span className="text-xs">(1 per day limit)</span>
             </span>
             <Input
               id="cadence"
@@ -133,9 +152,7 @@ export default function CreateSteps({
             onClick={onSchedule}
           >
             Schedule and create
-            {creatingPod && (
-              <Loader className="ml-2 h-4 w-4 animate-spin" />
-            )}
+            {creatingPod && <Loader className="ml-2 h-4 w-4 animate-spin" />}
           </Button>
         </form>
       </>
