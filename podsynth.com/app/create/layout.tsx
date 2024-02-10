@@ -110,7 +110,7 @@ export default async function CreateLayout({
           {children}
         </div>
         <div className="max-w-sm py-8 ">
-          <div className="font-bold">Popular Feeds</div>
+          <div className="font-bold">Try a popular feed</div>
           <div className="mt-2 flex flex-row justify-start w-full gap-2 flex-wrap">
             {feeds.map((feed) => (
               <Button key={feed.source} variant="secondary" size="sm" asChild>

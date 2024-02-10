@@ -36,15 +36,14 @@ export default function CreateSteps({
       }),
     });
 
-    // const dataText = await response.text();
-    // console.log(dataText);
     const dataText = await response.text();
 
     try {
       const data = JSON.parse(dataText);
       if (data.pass === true) {
         setCheckingCadence(false);
-        
+        setCadenceCron(data.cron);
+
       } else {
         setCadenceError(data.error);
         setCadenceError(data.message);
