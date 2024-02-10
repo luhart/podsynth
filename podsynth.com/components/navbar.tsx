@@ -37,7 +37,7 @@ export default async function Navbar() {
       <a href="#skip" className="sr-only focus:not-sr-only">
         Skip to content
       </a>
-      <div className="flex justify-between items-center py-4 max-w-xl w-full px-4">
+      <div className="flex justify-between items-center py-4 max-w-xl w-full sm:px-4">
         <Link href="/" className="text-sm font-medium">
           Podsynth
         </Link>

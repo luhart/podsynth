@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Item } from "./types";
 import { Loader } from "lucide-react";
+import { isValidCron } from "@/utils/helpers";
 
 interface CreateStepsProps {
   sourceUrl: string;
@@ -20,12 +21,11 @@ export default function CreateSteps({
 }: CreateStepsProps) {
   const [step, setStep] = useState<Step>("check");
   const [cadenceInput, setCadenceInput] = useState<string>("");
-  const [cadenceCron, setCadenceCron] = useState<string>("");
-  const [checkingCadence, setCheckingCadence] = useState<boolean>(false);
-  const [cadenceError, setCadenceError] = useState<string>("");
+  const [creatingPod, setCreatingPod] = useState<boolean>(false);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   async function onSchedule() {
-    setCheckingCadence(true);
+    setCreatingPod(true);
     const response = await fetch("/api/human-to-cron", {
       method: "POST",
       headers: {
@@ -41,20 +41,27 @@ export default function CreateSteps({
     try {
       const data = JSON.parse(dataText);
       if (data.pass === true) {
-        setCheckingCadence(false);
-        // setCadenceCron(data.cron);
         // createPod(sourceUrl, cadenceCron);
+        const cron = data.cron;
+        console.log("cron", cron);
+        const cronIsValid = isValidCron(cron);
+        if (!cronIsValid) {
+          setErrorMsg("Invalid cadence input. Please try again.");
+          setCreatingPod(false);
+          return;
+        }
+        setCreatingPod(false);
       } else {
-        setCadenceError(data.error);
-        setCadenceError(data.message);
-        setCheckingCadence(false);
+        setErrorMsg(data.error);
+        setErrorMsg(data.message);
+        setCreatingPod(false);
       }
     } catch (error) {
       console.error("Error parsing JSON", error);
-      setCadenceError("Error with cadence input. Please try again.");
-      setCheckingCadence(false);
+      setErrorMsg("Error with cadence input. Please try again.");
+      setCreatingPod(false);
     }
-    setCheckingCadence(false);
+    setCreatingPod(false);
   }
 
   if (step === "check") {
@@ -94,11 +101,11 @@ export default function CreateSteps({
   if (step === "schedule") {
     return (
       <>
-        <div className="text-xl font-bold">Schedule your pod</div>
+        <div className="text-xl font-bold">Schedule and create pod</div>
         <form className="flex flex-col gap-4">
           <label htmlFor="cadence" className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm font-medium block">
-              Cadence
+              Cadence<span className="text-gray-600 align-top">*</span> <span className="text-xs">(1 per day limit)</span>
             </span>
             <Input
               id="cadence"
@@ -113,20 +120,20 @@ export default function CreateSteps({
               required
             />
           </label>
-          {cadenceError && (
+          {errorMsg && (
             <div className="flex flex-row gap-2 items-center justify-center w-full border border-red-400 rounded p-2">
-              <div className="text-red-500 text-sm">{cadenceError}</div>
+              <div className="text-red-500 text-sm">{errorMsg}</div>
             </div>
           )}
           <Button
             variant="default"
             size="lg"
             type="submit"
-            disabled={checkingCadence || cadenceInput === ""}
+            disabled={creatingPod || cadenceInput === ""}
             onClick={onSchedule}
           >
-            Schedule pod
-            {checkingCadence && (
+            Schedule and create
+            {creatingPod && (
               <Loader className="ml-2 h-4 w-4 animate-spin" />
             )}
           </Button>

@@ -9,3 +9,8 @@ export const getURL = () => {
   url = url.charAt(url.length - 1) === '/' ? url : `${url}/`;
   return url;
 };
+
+export const isValidCron = (cron: string) => {
+  const cronRegex = /^((\*|([0-9]{1,2}(-[0-9]{1,2})?))(\/[0-9]{1,2})? ?){5}$/;
+  return cronRegex.test(cron);
+}

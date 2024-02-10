@@ -23,7 +23,7 @@ const samples = [
 
 const SampleSection = () => {
   return (
-    <div className="flex flex-col justify-start max-w-xl min-w-0 w-full p-4 gap-4 pt-12">
+    <div className="flex flex-col justify-start max-w-xl min-w-0 w-full gap-4 pt-12">
       <div className="flex flex-row gap-2 items-center">
         <AudioLines size={24} />
         <div className="text-xl font-bold">Samples</div>
