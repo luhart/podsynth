@@ -38,8 +38,8 @@ export default async function Navbar() {
         Skip to content
       </a>
       <div className="flex justify-between items-center py-4 max-w-xl w-full sm:px-4">
-        <Link href="/" className="text-sm font-medium">
-          Podsynth
+        <Link href="/" className="text-sm font-medium tracking-tight">
+          podsynth
         </Link>
         {user ? (
           <div className="flex flex-row items-center gap-2">
