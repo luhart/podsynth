@@ -1,12 +1,9 @@
-import NewPod from "@/components/NewPod";
 import Pods from "@/components/Pods";
-import PodsTable from "@/components/Pods";
 import { Footer } from "@/components/footer";
 import { Samples } from "@/components/samples";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { createClient } from "@/utils/supabase/server";
-import { AudioLines, Mail, Play, Plus } from "lucide-react";
+import { AudioLines } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
 

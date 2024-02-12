@@ -8,13 +8,16 @@ import { Item } from "./types";
 import { Loader } from "lucide-react";
 import { isValidCron } from "@/utils/helpers";
 import { createPod } from "@/utils/create-pod";
+import { useRouter } from "next/navigation";
 
 interface CreateStepsProps {
   sourceUrl: string;
   previewItems: Item[];
 }
 
-type Step = "check" | "schedule" | "confirm";
+type Step = "check" | "schedule"
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export default function CreateSteps({
   sourceUrl,
@@ -24,6 +27,9 @@ export default function CreateSteps({
   const [cadenceInput, setCadenceInput] = useState<string>("");
   const [creatingPod, setCreatingPod] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
+
+  const router = useRouter()
+  
 
   const podName =
     sourceUrl
@@ -60,8 +66,9 @@ export default function CreateSteps({
           setCreatingPod(false);
           return;
         }
-        // const res = await createPod({ sourceUrl, title: "" });
-
+        const res = await createPod({ cadenceInput: cadenceInput, sourceUrl: sourceUrl, cron: cron, timeZone: timeZone, title: podName });
+        // redirect to /
+        router.push("/");
         setCreatingPod(false);
       } else {
         setErrorMsg(data.error);
@@ -69,8 +76,8 @@ export default function CreateSteps({
         setCreatingPod(false);
       }
     } catch (error) {
-      console.error("Error parsing JSON", error);
-      setErrorMsg("Error with cadence input. Please try again.");
+      console.error("Error creating pod", error);
+      setErrorMsg(`Error creating pod: ${error}`);
       setCreatingPod(false);
     }
     setCreatingPod(false);

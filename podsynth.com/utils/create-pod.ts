@@ -26,6 +26,8 @@ export async function createPod({ sourceUrl, title, cron, cadenceInput, timeZone
 
   const userId = user.id;
 
+  // check cron will not run more than once a day
+
   const newPod: PodType = {
     source: sourceUrl,
     cron: cron,
@@ -37,16 +39,13 @@ export async function createPod({ sourceUrl, title, cron, cadenceInput, timeZone
     timezone: timeZone,
   };
 
-  const { data: newPodData, error: newPodError } = await supabase
+  const { error: newPodError } = await supabase
     .from("pods")
     .insert([newPod])
-    .select("*")
     .throwOnError()
-    .single();
-
+    
   if (newPodError) {
-    throw new Error("Failed to create pod");
-  } else {
-    return newPodData;
+    console.error(newPodError);
+    throw new Error(`Failed to create pod: ${newPodError.message}`);
   }
 }
