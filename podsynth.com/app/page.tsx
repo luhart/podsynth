@@ -47,8 +47,9 @@ export default async function Home() {
             Turn any feed into a recurring audio digest.
           </h1>
           <div className="text-gray-600">
-            Podsynth generates audio summaries straight from your favorite RSS
-            feeds.
+            Podsynth generates recurring audio summaries straight from your favorite RSS
+            feeds. Creating your first pod is easy - enter a url, a cadence, press a button, and
+            voila!
           </div>
           {/* <div className="text-gray-600">
         Sign up to experience pure bliss of latent space.
