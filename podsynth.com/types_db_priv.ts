@@ -651,8 +651,6 @@ export type Database = {
           id: string
           pod_id: string
           request_id: string | null
-          status: string | null
-          transcript: string | null
           url: string | null
         }
         Insert: {
@@ -661,8 +659,6 @@ export type Database = {
           id?: string
           pod_id: string
           request_id?: string | null
-          status?: string | null
-          transcript?: string | null
           url?: string | null
         }
         Update: {
@@ -671,8 +667,6 @@ export type Database = {
           id?: string
           pod_id?: string
           request_id?: string | null
-          status?: string | null
-          transcript?: string | null
           url?: string | null
         }
         Relationships: [

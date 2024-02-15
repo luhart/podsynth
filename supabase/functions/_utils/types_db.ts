@@ -16,8 +16,6 @@ export type Database = {
           id: string
           pod_id: string
           request_id: string | null
-          status: string | null
-          transcript: string | null
           url: string | null
         }
         Insert: {
@@ -26,8 +24,6 @@ export type Database = {
           id?: string
           pod_id: string
           request_id?: string | null
-          status?: string | null
-          transcript?: string | null
           url?: string | null
         }
         Update: {
@@ -36,8 +32,6 @@ export type Database = {
           id?: string
           pod_id?: string
           request_id?: string | null
-          status?: string | null
-          transcript?: string | null
           url?: string | null
         }
         Relationships: [
@@ -73,6 +67,44 @@ export type Database = {
           }
         ]
       }
+      pod_runs: {
+        Row: {
+          created_at: string
+          id: string
+          parsed_source: string | null
+          pod_id: string | null
+          source: string
+          status: string | null
+          summary: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parsed_source?: string | null
+          pod_id?: string | null
+          source: string
+          status?: string | null
+          summary?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parsed_source?: string | null
+          pod_id?: string | null
+          source?: string
+          status?: string | null
+          summary?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_pod_runs_pod_id_fkey"
+            columns: ["pod_id"]
+            isOneToOne: false
+            referencedRelation: "pods"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       pods: {
         Row: {
           created_at: string
@@ -81,7 +113,7 @@ export type Database = {
           cron_raw_input: string | null
           id: string
           query: string | null
-          source: string | null
+          source: string
           status: string | null
           timezone: string | null
           title: string | null
@@ -93,7 +125,7 @@ export type Database = {
           cron_raw_input?: string | null
           id?: string
           query?: string | null
-          source?: string | null
+          source: string
           status?: string | null
           timezone?: string | null
           title?: string | null
@@ -105,7 +137,7 @@ export type Database = {
           cron_raw_input?: string | null
           id?: string
           query?: string | null
-          source?: string | null
+          source?: string
           status?: string | null
           timezone?: string | null
           title?: string | null

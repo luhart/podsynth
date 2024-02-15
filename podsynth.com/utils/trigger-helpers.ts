@@ -47,7 +47,14 @@ export async function createSummary(text: string) {
       { role: "user", content: "Create a script for me from the following: " + text}
     ],
   })
-  return completion.choices[0].message.content
+  const result = completion.choices[0].message.content;
+  if (!result) {
+    throw new Error("Error creating summary");
+  }
+  
+  // if result starts with '\n' remove it
+  // replace all instances of '\n\n' with ' <break time="1.0s" /> '
+  return result.replace(/^\n/, "").replace(/\n\n/g, ' <break time="1.0s" /> ');
 }
 
 
