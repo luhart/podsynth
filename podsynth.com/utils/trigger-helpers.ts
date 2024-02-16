@@ -15,8 +15,8 @@ const openai = new OpenAI({
 
 const ELEVEN_LABS_URL = "https://api.elevenlabs.io/v1/text-to-speech/";
 
-// const VOICE_ID = "29vD33N1CtxCmqQRPOHJ";
-const VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
+// const VOICE_ID = "29vD33N1CtxCmqQRPOHJ"; // Drew
+const VOICE_ID = "EXAVITQu4vr4xnSDxMaL"; // Sarah
 const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
 
 // takes in rss feed url and returns a string which will be used to create a summary
@@ -43,9 +43,9 @@ export async function createSummary(text: string) {
     messages: [
       {
         role: "system",
-        content: "You are a writter for the news. You create readable scripts called 'pods' that will be read aloud by Greg on his radio segment. Do not include emojis or special characters. Add a signoff at the end of the script."
+        content: "You are a writter for the news. You create readable scripts for 'pods'. These pods are radie segments that will be read aloud by Sarah on her radio segment. Do not include emojis or special characters. Add a signoff at the end of the script."
       },
-      { role: "user", content: "Create a script for me from the following: " + text}
+      { role: "user", content: "Create a pod script for me from the following: " + text}
     ],
   })
   const result = completion.choices[0].message.content;
