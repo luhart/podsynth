@@ -14,7 +14,7 @@ import { redirect } from "next/navigation";
 const feeds = [
   { title: "Techmeme", source: "https://www.techmeme.com/feed.xml" },
   { title: "TechCrunch", source: "https://techcrunch.com/feed/" },
-  { title: "Morning Brew", source: "https://www.morningbrew.com/feed.xml" },
+  // { title: "Morning Brew", source: "https://www.morningbrew.com/feed.xml" }, // bad feed
   { title: "Billboard", source: "https://www.billboard.com/feed/" },
   { title: "Gizmodo", source: "https://gizmodo.com/rss" },
   { title: "The Verge", source: "https://www.theverge.com/rss/frontpage" },
