@@ -9,6 +9,7 @@ import { Loader } from "lucide-react";
 import { isValidCron } from "@/utils/helpers";
 import { createPod } from "@/utils/create-pod";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 interface CreateStepsProps {
   sourceUrl: string;
@@ -59,7 +60,6 @@ export default function CreateSteps({
       if (data.pass === true) {
         // createPod(sourceUrl, cadenceCron);
         const cron = data.cron;
-        console.log("cron", cron);
         const cronIsValid = isValidCron(cron);
         if (!cronIsValid) {
           setErrorMsg("Invalid cadence input. Please try again.");
@@ -68,6 +68,7 @@ export default function CreateSteps({
         }
         const res = await createPod({ cadenceInput: cadenceInput, sourceUrl: sourceUrl, cron: cron, timeZone: timeZone, title: podName });
         // redirect to /
+        revalidatePath("/");
         router.push("/");
         setCreatingPod(false);
       } else {

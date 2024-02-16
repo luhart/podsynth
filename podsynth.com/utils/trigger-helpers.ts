@@ -36,7 +36,6 @@ export async function parseSource(sourceUrl: string) {
 // [INST][/INST]
 // Instruct model fine-tuned by Mistral. If you send raw prompts, you should use [INST] and [/INST] tokens. Otherwise, with chat messages, the prompt will be formatted automatically for you.
 export async function createSummary(text: string) {
-  console.log("createSummary", text);
   const completion = await openai.chat.completions.create({
     model: "mistralai/mixtral-8x7b-instruct",
     messages: [

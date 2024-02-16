@@ -66,7 +66,6 @@ export async function POST(request: Request) {
     ],
   });
 
-  console.log(completion.choices[0].message);
   const result = completion.choices[0].message?.content?.trim() || "";
 
   if (!result) throw new Error("No result from OpenAI");
