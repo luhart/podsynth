@@ -72,7 +72,7 @@ export default async function Pods() {
           </Button>
         </div>
         {podsData && podsData.length > 0 ? (
-          <div className="w-full flex flex-col divide-y">
+          <div className="w-full flex flex-col gap-4">
             {podsData.map((pod, index) => (
               <div
                 key={index}
