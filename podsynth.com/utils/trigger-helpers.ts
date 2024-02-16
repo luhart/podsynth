@@ -14,7 +14,9 @@ const openai = new OpenAI({
 })
 
 const ELEVEN_LABS_URL = "https://api.elevenlabs.io/v1/text-to-speech/";
-const VOICE_ID = "29vD33N1CtxCmqQRPOHJ";
+
+// const VOICE_ID = "29vD33N1CtxCmqQRPOHJ";
+const VOICE_ID = "EXAVITQu4vr4xnSDxMaL";
 const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
 
 // takes in rss feed url and returns a string which will be used to create a summary
