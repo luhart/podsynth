@@ -8,13 +8,18 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 
 const samples = [
-  // {
-  //   name: "This week in agriculture",
-  //   url: "/ag.mp3",
-  // },
+  
   {
-    name: "Technology Today",
+    name: "Technology (techmeme rss)",
+    url: "/techmeme-sample.mp3",
+  },
+  {
+    name: "Technology (multi-source)",
     url: "/tech.mp3",
+  },
+  {
+    name: "Agriculture (agdaily)",
+    url: "/ag-daily.mp3",
   },
 ];
 
