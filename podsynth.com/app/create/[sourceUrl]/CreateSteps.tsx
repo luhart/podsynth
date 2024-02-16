@@ -16,7 +16,7 @@ interface CreateStepsProps {
   previewItems: Item[];
 }
 
-type Step = "check" | "schedule"
+type Step = "check" | "schedule";
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -29,8 +29,7 @@ export default function CreateSteps({
   const [creatingPod, setCreatingPod] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>("");
 
-  const router = useRouter()
-  
+  const router = useRouter();
 
   const podName =
     sourceUrl
@@ -66,10 +65,17 @@ export default function CreateSteps({
           setCreatingPod(false);
           return;
         }
-        const res = await createPod({ cadenceInput: cadenceInput, sourceUrl: sourceUrl, cron: cron, timeZone: timeZone, title: podName });
-        // redirect to /
-        revalidatePath("/");
+        const res = await createPod({
+          cadenceInput: cadenceInput,
+          sourceUrl: sourceUrl,
+          cron: cron,
+          timeZone: timeZone,
+          title: podName,
+        });
+        // figure out revalidatePath here, might need to just put everything in a server function
+        router.refresh();
         router.push("/");
+        router.refresh();
         setCreatingPod(false);
       } else {
         setErrorMsg(data.error);
@@ -122,13 +128,13 @@ export default function CreateSteps({
     return (
       <>
         <div>
-          <div className="text-sm font-medium mb-1 text-gray-500">
-            {podName}
-          </div>
           <div className="text-xl font-bold">Schedule and create pod</div>
+          <div className="text-gray-600 mt-1">
+            We will create your first episode and start your schedule.
+          </div>
         </div>
 
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4 mt-2">
           <label htmlFor="cadence" className="flex flex-col gap-1">
             <span className="text-gray-600 text-sm font-medium block">
               Cadence<span className="text-gray-600 align-top">*</span>{" "}
@@ -152,6 +158,7 @@ export default function CreateSteps({
               <div className="text-red-500 text-sm">{errorMsg}</div>
             </div>
           )}
+
           <Button
             variant="default"
             size="lg"
