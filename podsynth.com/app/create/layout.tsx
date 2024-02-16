@@ -22,7 +22,7 @@ const feeds = [
   { title: "NASA News", source: "https://www.nasa.gov/news-release/feed/" },
   { title: "Ag Daily", source: "https://www.agdaily.com/feed/" },
   {
-    title: "Fortune Feeds",
+    title: "Fortune",
     source: "https://fortune.com/feed/fortune-feeds/?id=3230629",
   },
   { title: "Financial Times", source: "https://www.ft.com/rss/home" },

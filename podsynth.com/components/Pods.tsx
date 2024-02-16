@@ -98,15 +98,29 @@ export default async function Pods() {
                   </Button>
                 </div>
                 <div className="flex flex-col gap-2 items-center px-4 py-3">
-                  <div className="text-gray-600">Latest episode</div>
-                  {pod.audio && pod.audio.length > 0 && pod.audio[0] && pod.audio[0].url && (
-                    <audio controls className="w-full">
-                      <source
-                        src={getAudioUrl(pod.audio[0].url)}
-                        type="audio/mpeg"
-                      />
-                      Your browser does not support the audio element.
-                    </audio>
+                  {pod.audio &&
+                  pod.audio.length > 0 &&
+                  pod.audio[0] &&
+                  pod.audio[0].url ? (
+                    <>
+                      <div className="text-gray-600">Latest episode</div>
+                      <audio controls className="w-full">
+                        <source
+                          src={getAudioUrl(pod.audio[0].url)}
+                          type="audio/mpeg"
+                        />
+                        Your browser does not support the audio element.
+                      </audio>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-gray-600">
+                        Creating first episode...
+                      </div>
+                      <div className="text-gray-600">
+                        It usually takes 2ish minutes.
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
