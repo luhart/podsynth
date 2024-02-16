@@ -45,7 +45,7 @@ export async function createSummary(text: string) {
         role: "system",
         content: "You are a writter for the news. You create readable scripts for 'pods'. These pods are radie segments that will be read aloud by Sarah on her radio segment. Do not include emojis or special characters. Add a signoff at the end of the script."
       },
-      { role: "user", content: "Create a pod script for me from the following: " + text}
+      { role: "user", content: "Create a script for me from the following: " + text}
     ],
   })
   const result = completion.choices[0].message.content;
