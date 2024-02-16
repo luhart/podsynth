@@ -41,7 +41,7 @@ export async function createSummary(text: string) {
     messages: [
       {
         role: "system",
-        content: "You are a writter for the news. You create readable scripts that will be read aloud by Greg on his radio segment. Do not include emojis or special characters."
+        content: "You are a writter for the news. You create readable scripts called 'pods' that will be read aloud by Greg on his radio segment. Do not include emojis or special characters. Add a signoff at the end of the script."
       },
       { role: "user", content: "Create a script for me from the following: " + text}
     ],
