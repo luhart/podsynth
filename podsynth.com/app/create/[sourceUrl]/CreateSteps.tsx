@@ -9,7 +9,6 @@ import { Loader } from "lucide-react";
 import { isValidCron } from "@/utils/helpers";
 import { createPod } from "@/utils/create-pod";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 interface CreateStepsProps {
   sourceUrl: string;
@@ -19,6 +18,7 @@ interface CreateStepsProps {
 type Step = "check" | "schedule";
 
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 
 export default function CreateSteps({
   sourceUrl,

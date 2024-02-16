@@ -19,7 +19,7 @@ const ELEVEN_LABS_KEY = process.env.ELEVEN_LABS_KEY;
 
 // takes in rss feed url and returns a string which will be used to create a summary
 export async function parseSource(sourceUrl: string) {
-  const numItems = 8;
+  const numItems = 10;
   const data = await parseRssFeed(sourceUrl, numItems);
 
   const parsedData = data.reduce<string>((accumulator, currentItem) => {
