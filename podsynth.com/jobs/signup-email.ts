@@ -14,6 +14,7 @@ client.defineJob({
   id: "supabase-test-job",
   name: "My Supabase Test Job",
   version: "1.0.0",
+  enabled: false,
   trigger: db.onInserted({
     schema: "auth",
     table: "users",

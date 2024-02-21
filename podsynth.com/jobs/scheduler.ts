@@ -20,6 +20,7 @@ client.defineJob({
   name: "Pods Scheduler",
   version: "0.0.1",
   trigger: dynamicSchedule,
+  enabled: false,
   run: async (payload, io, ctx) => {
     // if (ctx.source && ctx.source.id) {
     //   await io.logger.info("The userId is ", ctx.source.id);

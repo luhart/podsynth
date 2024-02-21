@@ -23,6 +23,7 @@ client.defineJob({
   id: "pod-runs-insert",
   name: "Pod Runs Insert Job",
   version: "0.0.1",
+  enabled: false,
   integrations: {
     supabase,
   },
