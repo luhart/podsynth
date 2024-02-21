@@ -38,6 +38,8 @@ export async function signup(prevState: any, formData: FormData) {
     }
   });
 
+  console.log(data, error);
+
   if (error) {
     console.error("Error signing up:", error);
     return {

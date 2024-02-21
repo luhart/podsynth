@@ -35,6 +35,27 @@ const SampleSection = () => {
   );
 };
 
+const HowItWorks = () => {
+  return (
+    <div className="flex flex-col justify-start max-w-xl min-w-0 w-full gap-4 pt-12">
+      <div className="flex flex-row gap-2 items-center">
+        <div className="text-xl font-bold">How it works</div>
+      </div>
+      <div className="text-gray-600">
+        <div>
+          1. Create a pod by entering a feed url and a cadence.
+        </div>
+        <div>
+          2. We will generate a recurring audio digest from the feed.
+        </div>
+        <div>
+          3. Listen to the latest episode and share with friends.
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default async function Home() {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
@@ -65,6 +86,7 @@ export default async function Home() {
             </Button>
           </div>
         <SampleSection />
+        {/* <HowItWorks /> */}
         </div>
         <Footer /> 
       </main>
