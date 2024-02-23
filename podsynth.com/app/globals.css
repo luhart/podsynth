@@ -57,3 +57,21 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bg-cross {
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.01),
+      rgba(0, 0, 0, 0.01) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.01),
+      rgba(0, 0, 0, 0.01) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  background-size: 4px 4px;
+}
