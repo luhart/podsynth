@@ -104,10 +104,12 @@ export default function HomeClientAnon() {
           </div>
         )}
       </div>
-
-      {enabledServices && enabledServices.length > 0 && (
+      <div>
         <div className="text-lg font-bold">blocks</div>
-      )}
+        <Button variant={"outline"}>
+          Add block
+        </Button>
+      </div>
     </div>
   );
 }

@@ -12,6 +12,7 @@ export default async function Home() {
               This is a place for quickly testing out different mixes of language and audio generation models. It may also turn into a place for people to share and discuss their creations. For now, it&apos;s just a place to play around with some models.
             </div>
           </div>
+          <div>Below is a preview. Sign up for the waitlist to be first in line</div>
           <div className="w-full border-t" />
           <HomeClientAnon />
         </div>
