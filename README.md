@@ -1,3 +1,3 @@
 # podsynth
 
-turn any website into a podcast
+test out all the models
