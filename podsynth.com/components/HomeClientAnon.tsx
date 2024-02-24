@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { LoaderIcon } from "lucide-react";
+import { LoaderIcon, Plus } from "lucide-react";
 
 const SERVICES = [
   { name: "OpenRouter", key_name: "openrouter" },
@@ -72,7 +72,7 @@ export default function HomeClientAnon() {
           ))}
         </div>
         {enabledServices.length > 0 && (
-          <div className="flex flex-col gap-6 border rounded-sm px-4 py-6 mt-2">
+          <div className="flex flex-col gap-6 border rounded-sm px-4 py-6 mt-2 bg-white">
             {enabledServices.map((service: Service) => (
               <ServiceItem
                 key={service.key_name}
@@ -107,7 +107,7 @@ export default function HomeClientAnon() {
       <div>
         <div className="text-lg font-bold">blocks</div>
         <Button variant={"outline"}>
-          Add block
+          Add block <Plus size={14} className="ml-1 text-gray-600" />
         </Button>
       </div>
     </div>
