@@ -20,7 +20,6 @@ type Service = {
 };
 
 export default function HomeClientAnon() {
-  const [loading, setLoading] = useState(false);
   const [openRouter, setOpenRouter] = useState("");
   const [elevenLabs, setElevenLabs] = useState("");
   const [perplexity, setPerplexity] = useState("");
@@ -32,15 +31,11 @@ export default function HomeClientAnon() {
     { name: "ElevenLabs", key_name: "elevenlabs" },
   ]);
 
-  if (loading) {
-    return <LoaderIcon className="animate-spin" />;
-  }
-
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8" id="preview">
       {/* label */}
       <div className="flex flex-col gap-2">
-        <div className="text-lg font-bold">services</div>
+        <div className="text-lg font-bold" id="">services</div>
         {/* service toggles */}
         <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
           {SERVICES.map((service: Service) => (
