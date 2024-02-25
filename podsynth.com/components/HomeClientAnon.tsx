@@ -34,8 +34,9 @@ export default function HomeClientAnon() {
   return (
     <div className="flex flex-col gap-8" id="preview">
       {/* label */}
+      <div className="text-lg font-bold tracking-tight">Preview</div>
       <div className="flex flex-col gap-2">
-        <div className="text-lg font-bold" id="">services</div>
+        <div className="font-medium tracking-tight" id="">services</div>
         {/* service toggles */}
         <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
           {SERVICES.map((service: Service) => (
@@ -100,7 +101,7 @@ export default function HomeClientAnon() {
         )}
       </div>
       <div>
-        <div className="text-lg font-bold">blocks</div>
+        <div className="font-medium tracking-tight">blocks</div>
         <Button variant={"outline"}>
           Add block <Plus size={14} className="ml-1 text-gray-600" />
         </Button>
