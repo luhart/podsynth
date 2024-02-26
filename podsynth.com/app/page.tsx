@@ -20,8 +20,8 @@ export default async function Home() {
           <WaitlistForm />
         </div>
       </div>
-      <div className="max-w-3xl w-full border-l border-r flex flex-col items-center pb-24 bg-gray-50">
-      <div className="h-[1px] w-full bg-gray-200 mb-12" />
+      <div className="max-w-3xl w-full border-l border-r flex flex-col items-center pb-24">
+        <div className="h-[1px] w-full bg-gray-200 mb-12" />
         {/* <div className="flex sm:flex-row flex-col justify-between gap-4 w-full">
             <div className="flex-1 border rounded px-2 py-3 bg-gray-50 flex flex-col gap-3">
               <div>Explore models</div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { LoaderIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 const SERVICES = [
   { name: "OpenRouter", key_name: "openrouter" },
@@ -32,11 +32,29 @@ export default function HomeClientAnon() {
   ]);
 
   return (
-    <div className="flex flex-col gap-8" id="preview">
+    <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
       {/* label */}
-      <div className="text-lg font-bold tracking-tight">Preview</div>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <div className="text-lg font-bold tracking-tight">Preview</div>
+          <div className="text-gray-600 text-sm">
+            Connect your third party model services to start adding blocks. We
+            do not yet store your keys, blocks, or workflows. All the api calls happen between your
+            browser and the third party service.
+          </div>
+        </div>
+        <div className="text-gray-600 text-sm px-3 py-4 border bg-gray-50">
+          The initial example is a workflow that takes in an RSS url, parses out
+          the most recent 5 stories, creates a readable summary using{" "}
+          <code>mixtral-8x7b-instruct</code>, and pipes the output into an
+          neets.ai tts model.
+        </div>
+      </div>
+
       <div className="flex flex-col gap-2">
-        <div className="font-medium tracking-tight" id="">services</div>
+        <div className="font-medium tracking-tight" id="">
+          Services
+        </div>
         {/* service toggles */}
         <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
           {SERVICES.map((service: Service) => (
@@ -101,7 +119,7 @@ export default function HomeClientAnon() {
         )}
       </div>
       <div>
-        <div className="font-medium tracking-tight">blocks</div>
+        <div className="font-medium tracking-tight">Blocks</div>
         <Button variant={"outline"}>
           Add block <Plus size={14} className="ml-1 text-gray-600" />
         </Button>
