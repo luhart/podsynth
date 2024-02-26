@@ -13,8 +13,8 @@ export default async function Home() {
             </h1>
             <div className="text-gray-600">
               This is a place for quickly testing out different mixes of
-              language and audio generation models. Everything in this preview
-              is ephemeral.
+              language and audio generation models. Everything is currently
+              stored locally in your browser.
             </div>
           </div>
           <WaitlistForm />
