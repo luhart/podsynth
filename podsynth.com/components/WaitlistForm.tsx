@@ -17,14 +17,14 @@ export default function WaitlistForm() {
       <div className="flex flex-row items-center">
         <div className="flex flex-col gap-12">
           <div
-            className={`hidden 2xs:block sm:px-8 px-4 rounded-l-full border border-r-0 h-3 ${
+            className={`hidden 2xs:block sm:px-8 px-4 rounded-l-full border border-r-0 h-2 ${
               email !== ""
                 ? "bg-gradient-to-r from-green-200 to-green-100 border-green-200"
                 : "bg-gradient-to-r from-gray-200 to-gray-100"
             }`}
           />
           <div
-            className={`hidden 2xs:block sm:px-8 px-4 border border-r-0 rounded-l-full h-3 ${
+            className={`hidden 2xs:block sm:px-8 px-4 border border-r-0 rounded-l-full h-2 ${
               question !== ""
                 ? "bg-gradient-to-r from-green-200 to-green-100 border-green-200"
                 : "bg-gradient-to-r from-gray-200 to-gray-100"
@@ -90,7 +90,7 @@ export default function WaitlistForm() {
           )}
         </form>
         <div
-          className={`hidden 2xs:block sm:px-12 px-6 border border-l-0 rounded-r-full  h-4 ${
+          className={`hidden 2xs:block sm:px-12 px-6 border border-l-0 rounded-r-full h-2 ${
             email !== "" && question !== ""
               ? "bg-gradient-to-l from-green-200 to-green-100 border-green-200"
               : "bg-gradient-to-l from-gray-200 to-gray-100"
