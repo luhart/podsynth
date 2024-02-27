@@ -1,4 +1,4 @@
-import HomeClientAnon from "@/components/HomeClientAnon";
+import { HomeClientAnonWrapped } from "@/components/HomeClientAnon";
 import WaitlistForm from "@/components/WaitlistForm";
 import { Footer } from "@/components/footer";
 
@@ -34,7 +34,7 @@ export default async function Home() {
             </div>
           </div> */}
 
-        <HomeClientAnon />
+        <HomeClientAnonWrapped />
       </div>
       <Footer />
     </main>

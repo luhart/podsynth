@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Plus } from "lucide-react";
+import { CommandDialogDemo } from "./AppCmd";
+import { Provider } from "jotai";
 
 const SERVICES = [
   { name: "OpenRouter", key_name: "openrouter" },
@@ -19,7 +20,7 @@ type Service = {
   key_name: string;
 };
 
-export default function HomeClientAnon() {
+function HomeClientAnon() {
   const [openRouter, setOpenRouter] = useState("");
   const [elevenLabs, setElevenLabs] = useState("");
   const [perplexity, setPerplexity] = useState("");
@@ -39,13 +40,14 @@ export default function HomeClientAnon() {
           <div className="text-lg font-bold tracking-tight">Preview</div>
           <div className="text-gray-600 text-sm">
             Connect your third party model services to start adding blocks. We
-            only store keys in local storage. All the api calls happen between your
-            browser and the third party service.
+            only store keys in local storage. All the api calls happen between
+            your browser and the third party service.
           </div>
         </div>
-        <div className="text-gray-600 text-sm px-3 py-4 border bg-gray-50">
-          The following example grabs the five most recent items from an RSS feed, creates a readable summary using{" "}
-          <code>mixtral-8x7b-instruct</code>, and pipes the output to a
+        <div className="text-gray-600 text-sm px-3 py-4 border bg-white">
+          The following example grabs the five most recent items from an RSS
+          feed, creates a readable summary using{" "}
+          <code>mixtral-8x7b-instruct</code>, and pipes the output to an
           ElevenLabs tts model.
         </div>
       </div>
@@ -117,12 +119,12 @@ export default function HomeClientAnon() {
           </div>
         )}
       </div>
-      <div className="flex flex-row gap-2 items-center">
+      <div className="flex flex-row gap-2 items-center justify-between">
         <div className="font-medium tracking-tight">Blocks</div>
-        <Button variant={"outline"}>
-          Add block <Plus size={14} className="ml-1 text-gray-600" />
-        </Button>
+        <div className="h-[1px] flex-1 bg-gray-200" />
+        <CommandDialogDemo />
       </div>
+      <CanvasContainer />
     </div>
   );
 }
@@ -146,3 +148,20 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
     </div>
   );
 };
+
+const CanvasContainer = () => {
+  return (
+    <div className="border rounded-sm p-4 bg-white">
+      
+    </div>
+  );
+};
+
+
+export const HomeClientAnonWrapped = () => {
+  return (
+    <Provider>
+      <HomeClientAnon />
+    </Provider>
+  );
+}
