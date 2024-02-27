@@ -4,33 +4,45 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { CommandDialogDemo } from "./AppCmd";
-import { Provider } from "jotai";
+import { Provider, atom, useAtom } from "jotai";
+import { atomWithStorage } from 'jotai/utils'
 
-const SERVICES = [
-  { name: "OpenRouter", key_name: "openrouter" },
-  { name: "ElevenLabs", key_name: "elevenlabs" },
-  { name: "OpenAI", key_name: "openai" },
-  { name: "perplexity", key_name: "perplexity" },
-  { name: "neets", key_name: "neets.ai" },
-  { name: "PlayHT", key_name: "playht" },
-];
 
-type Service = {
-  name: string;
-  key_name: string;
-};
+const servicesAtom = atomWithStorage("services", [
+  {
+    name: "OpenRouter",
+    key: "",
+    enabled: true,
+  },
+  {
+    name: "ElevenLabs",
+    key: "",
+    enabled: true,
+  },
+  {
+    name: "OpenAI",
+    key: "",
+    enabled: false,
+  },
+  {
+    name: "perplexity",
+    key: "",
+    enabled: false,
+  },
+  {
+    name: "neets",
+    key: "",
+    enabled: false,
+  },
+  {
+    name: "PlayHT",
+    key: "",
+    enabled: false,
+  },
+]);
 
 function HomeClientAnon() {
-  const [openRouter, setOpenRouter] = useState("");
-  const [elevenLabs, setElevenLabs] = useState("");
-  const [perplexity, setPerplexity] = useState("");
-  const [neets, setNeets] = useState("");
-  const [playHT, setPlayHT] = useState("");
-
-  const [enabledServices, setEnabledServices] = useState<Service[]>([
-    { name: "OpenRouter", key_name: "openrouter" },
-    { name: "ElevenLabs", key_name: "elevenlabs" },
-  ]);
+  const [services, setServices] = useAtom(servicesAtom);
 
   return (
     <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
@@ -39,9 +51,9 @@ function HomeClientAnon() {
         <div className="flex flex-col gap-1">
           <div className="text-lg font-bold tracking-tight">Preview</div>
           <div className="text-gray-600 text-sm">
-            Connect your third party model services to start adding blocks. We
-            only store keys in local storage. All the api calls happen between
-            your browser and the third party service.
+            Connect third party services to start adding to blocks to your
+            canvas. Your keys are kept in local storage. All calls to third
+            parties happen between your browser and the third party service.
           </div>
         </div>
         <div className="text-gray-600 text-sm px-3 py-4 border bg-white">
@@ -58,64 +70,49 @@ function HomeClientAnon() {
         </div>
         {/* service toggles */}
         <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
-          {SERVICES.map((service: Service) => (
-            <div key={service.key_name} className="flex flex-col gap-2">
+          {services.map((service) => (
+            <div key={service.name} className="flex flex-col gap-2">
               {/* badge toggle  */}
               <Button
                 size="sm"
                 className="rounded-full px-4 py-2"
                 onClick={() => {
-                  setEnabledServices((prev) => {
-                    if (prev.some((s) => s.key_name === service.key_name)) {
-                      return prev.filter(
-                        (s) => s.key_name !== service.key_name
-                      );
-                    } else {
-                      return [...prev, service];
-                    }
-                  });
+                  setServices((prev) =>
+                    prev.map((s) =>
+                      s.name === service.name
+                        ? { ...s, enabled: !s.enabled }
+                        : s
+                    )
+                  );
                 }}
-                variant={
-                  enabledServices.some((s) => s.key_name === service.key_name)
-                    ? "default"
-                    : "secondary"
-                }
+                variant={service.enabled ? "default" : "secondary"}
               >
                 {service.name}
               </Button>
             </div>
           ))}
         </div>
-        {enabledServices.length > 0 && (
+        {services.some((s) => s.enabled) && (
           <div className="flex flex-col gap-6 border rounded-sm px-4 py-6 mt-2 bg-white">
-            {enabledServices.map((service: Service) => (
-              <ServiceItem
-                key={service.key_name}
-                label={service.name}
-                value={
-                  service.key_name === "openrouter"
-                    ? openRouter
-                    : service.key_name === "elevenlabs"
-                    ? elevenLabs
-                    : service.key_name === "perplexity"
-                    ? perplexity
-                    : service.key_name === "neets.ai"
-                    ? neets
-                    : playHT
-                }
-                setValue={
-                  service.key_name === "openrouter"
-                    ? setOpenRouter
-                    : service.key_name === "elevenlabs"
-                    ? setElevenLabs
-                    : service.key_name === "perplexity"
-                    ? setPerplexity
-                    : service.key_name === "neets.ai"
-                    ? setNeets
-                    : setPlayHT
-                }
-              />
-            ))}
+            {services.map(
+              (service) =>
+                service.enabled && (
+                  <ServiceItem
+                    key={service.name}
+                    label={service.name}
+                    value={service.key}
+                    setValue={(value) => {
+                      setServices((prev) =>
+                        prev.map((s) =>
+                          s.name === service.name
+                            ? { ...s, key: value }
+                            : s
+                        )
+                      );
+                    }}
+                  />
+                )
+            )}
           </div>
         )}
       </div>
@@ -150,13 +147,8 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
 };
 
 const CanvasContainer = () => {
-  return (
-    <div className="border rounded-sm p-4 bg-white">
-      
-    </div>
-  );
+  return <div className="border rounded-sm p-4 bg-white"></div>;
 };
-
 
 export const HomeClientAnonWrapped = () => {
   return (
@@ -164,4 +156,4 @@ export const HomeClientAnonWrapped = () => {
       <HomeClientAnon />
     </Provider>
   );
-}
+};
