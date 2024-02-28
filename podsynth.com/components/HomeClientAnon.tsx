@@ -58,6 +58,7 @@ function HomeClientAnon() {
   const [rssFeedUrl, setRssFeedUrl] = useState("https://techmeme.com/feed.xml");
   const [rssNumItems, setRssNumItems] = useState(5);
   const [rssResult, setRssResult] = useState<string | null>(null);
+  const [rssResultTime, setRssResultTime] = useState<number | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
 
   const [error, setError] = useState<string | null>(null);
@@ -76,8 +77,7 @@ function HomeClientAnon() {
     setRssResult(rssResult);
   };
 
-
-  useEffect(() => {    
+  useEffect(() => {
     const callRunWorkFlow = async () => {
       setRunning(true);
       setError(null);
@@ -93,8 +93,11 @@ function HomeClientAnon() {
         return;
       }
       try {
+        const start = performance.now();
         const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
+        const end = performance.now();
         setRssResult(rssResult);
+        setRssResultTime(end - start);
       } catch (error) {
         setError("Failed to parse RSS feed.");
       }
@@ -110,7 +113,6 @@ function HomeClientAnon() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, [rssFeedUrl, rssNumItems]);
-
 
   return (
     <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
@@ -189,19 +191,22 @@ function HomeClientAnon() {
           <CommandDialogDemo />
         </div>
         <div className="flex flex-col gap-3 w-full">
-          <div className="flex flex-col gap-3 border px-3 py-4 bg-white rounded">
-            <div className="flex flex-row justify-between items-center">
-              <div className="font-medium">Parse RSS feed (utility)</div>
+          <div className="flex flex-col gap-3 border px-4 py-6 bg-white rounded-sm">
+            <div className="flex flex-row justify-between items-start">
+              <div>
+                <div className="font-medium">Parse RSS feed (utility)</div>
+                <div className="text-gray-600 text-sm">
+                  Grabs the most recent &#123;numItems&#125; from an RSS feed
+                  &#123;source&#125;.
+                </div>
+              </div>
+
               <Button size="sm" variant="secondary">
                 Edit
               </Button>
             </div>
-            <div className="text-gray-600 text-sm mb-4">
-              Grabs the most recent &#123;numItems&#125; from an RSS feed
-              &#123;source&#125;.
-            </div>
+
             <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-4">
-              <div className="text-sm text-gray-600 font-medium">Input</div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm text-gray-600 font-medium">
                   source
@@ -247,33 +252,33 @@ function HomeClientAnon() {
               </div>
             </div>
             {rssResult && (
-              <div className="flex flex-col border-2 border-green-400 bg-gray-50 rounded-xl px-4 py-5 gap-2">
-                <div className="flex justify-between items-center">
-                  <div className="text-sm text-gray-600 font-medium">
-                    Output
+              <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
+                <div className="text-sm text-gray-600 font-medium">
+                  Finished in {rssResultTime}ms.
+                </div>
+                <div className="flex flex-row gap-1 items-center">
+                  <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
+                    <code className="line-clamp-3">{rssResult}</code>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
+                    className="shrink-0"
                     onClick={() => {
                       navigator.clipboard.writeText(rssResult || "");
                       setCopied(true);
                     }}
                   >
                     {copied ? (
-                      <CopyCheck className="w-4 h-4" />
+                      <CopyCheck className="w-4 h-4 text-gray-600" />
                     ) : (
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-4 h-4 text-gray-600" />
                     )}
                   </Button>
-                </div>
-                <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-                  <code className="line-clamp-3">{rssResult}</code>
                 </div>
               </div>
             )}
           </div>
-          <div className=""></div>
           <Button
             onClick={async () => {
               setRunning(true);
@@ -281,15 +286,23 @@ function HomeClientAnon() {
               setRunning(false);
             }}
             size="lg"
+            disabled={running}
+            className="flex flex-row justify-between"
           >
-            Run{" "}
-            <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-b-2 bg- px-1.5 font-mono text-[12px] font-medium .dark:text-muted-foreground opacity-100">
-              <span className="text-xs">⌘</span>
-            </kbd>
-            <kbd className="ml-1 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-b-2 .dark:bg-muted px-1.5 font-mono text-[12px] font-medium .dark:text-muted-foreground opacity-100">
-              ↩
-            </kbd>
-            {running && <LoaderIcon className="animate-spin ml-2 w-4 h-4" />}
+            <div className="w-[44px]"/>
+            <div className="flex flex-row items-center gap-2">
+              Run{" "}
+              {running && <LoaderIcon className="animate-spin w-4 h-4" />}
+            </div>
+
+            <div className="flex item-center gap-1">
+              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                ⌘
+              </kbd>
+              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                ↩
+              </kbd>
+            </div>
           </Button>
         </div>
       </div>
