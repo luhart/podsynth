@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { CommandDialogDemo } from "./AppCmd";
@@ -75,6 +75,42 @@ function HomeClientAnon() {
     const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
     setRssResult(rssResult);
   };
+
+
+  useEffect(() => {    
+    const callRunWorkFlow = async () => {
+      setRunning(true);
+      setError(null);
+      setRssResult(null);
+      if (rssNumItems < 1) {
+        setError("Error in Parse RSS Utility: numItems must be greater than 0");
+        setRunning(false);
+        return;
+      }
+      if (rssNumItems > 10) {
+        setError("Error in Parse RSS Utility: numItems 10 or less.");
+        setRunning(false);
+        return;
+      }
+      try {
+        const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
+        setRssResult(rssResult);
+      } catch (error) {
+        setError("Failed to parse RSS feed.");
+      }
+      setRunning(false);
+    };
+
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        callRunWorkFlow();
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, [rssFeedUrl, rssNumItems]);
+
 
   return (
     <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
@@ -165,9 +201,7 @@ function HomeClientAnon() {
               &#123;source&#125;.
             </div>
             <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-4">
-              <div className="text-sm text-gray-600 font-medium">
-                Input
-              </div>
+              <div className="text-sm text-gray-600 font-medium">Input</div>
               <div className="flex flex-col gap-1">
                 <label className="text-sm text-gray-600 font-medium">
                   source
@@ -215,16 +249,22 @@ function HomeClientAnon() {
             {rssResult && (
               <div className="flex flex-col border-2 border-green-400 bg-gray-50 rounded-xl px-4 py-5 gap-2">
                 <div className="flex justify-between items-center">
-                  <div className="text-sm text-gray-600 font-medium">Output</div>
+                  <div className="text-sm text-gray-600 font-medium">
+                    Output
+                  </div>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      navigator.clipboard.writeText(rssResult || '');
+                      navigator.clipboard.writeText(rssResult || "");
                       setCopied(true);
                     }}
                   >
-                    {copied ? <CopyCheck className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    {copied ? (
+                      <CopyCheck className="w-4 h-4" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
                   </Button>
                 </div>
                 <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
@@ -233,14 +273,22 @@ function HomeClientAnon() {
               </div>
             )}
           </div>
+          <div className=""></div>
           <Button
             onClick={async () => {
               setRunning(true);
               await runWorkflow();
               setRunning(false);
             }}
+            size="lg"
           >
             Run{" "}
+            <kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-b-2 bg- px-1.5 font-mono text-[12px] font-medium .dark:text-muted-foreground opacity-100">
+              <span className="text-xs">⌘</span>
+            </kbd>
+            <kbd className="ml-1 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-b-2 .dark:bg-muted px-1.5 font-mono text-[12px] font-medium .dark:text-muted-foreground opacity-100">
+              ↩
+            </kbd>
             {running && <LoaderIcon className="animate-spin ml-2 w-4 h-4" />}
           </Button>
         </div>
