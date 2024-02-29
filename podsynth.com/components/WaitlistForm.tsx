@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, LoaderIcon } from "lucide-react";
+import { ArrowRight, CheckCircle, LoaderIcon } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -67,11 +67,15 @@ export default function WaitlistForm() {
                   className="bg-white"
                 />
               </label>
-              <Button variant="default" disabled={loading}>
-                Submit{" "}
-                {loading && (
-                  <LoaderIcon className="animate-spin w-4 h-4 text-white ml-2" />
-                )}
+              <Button variant="default" disabled={loading} className="flex flex-row justify-between items-center group px-6">
+                <div className="w-4" />
+                <div className="flex flex-row gap-1 items-center">
+                  Submit
+                  {loading && (
+                    <LoaderIcon className="animate-spin w-4 h-4 text-white ml-2" />
+                  )}
+                </div>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
               </Button>
             </>
           ) : (
@@ -83,7 +87,10 @@ export default function WaitlistForm() {
                 </div>
                 <div className="text-green-600">
                   In the meantime,{" "}
-                  <Link href="#preview" className="underline text-medium">try the preview</Link> ↓
+                  <Link href="#preview" className="underline text-medium">
+                    try the preview
+                  </Link>{" "}
+                  ↓
                 </div>
               </div>
             </div>
