@@ -32,6 +32,16 @@ export async function rssUtilityBlockFunction(
     const start = performance.now();
     const rssResult = await parseRssSource(source, numItems);
     const end = performance.now();
+  
+    if (!rssResult || rssResult.length === 0) {
+      return {
+        error: "Error parsing the source. Please check the URL and try again.",
+        output: null,
+        status: "error",
+        executionTime: 0,
+      };
+    }
+
     return {
       error: null,
       output: rssResult,
@@ -61,7 +71,7 @@ export async function parseRssSource(sourceUrl: string, numItems: number) {
 
   const data: Item[] = await res.json();
 
-  if (!data) {
+  if (!data || data.length === 0) {
     throw new Error("Error fetching RSS feed");
   }
 
