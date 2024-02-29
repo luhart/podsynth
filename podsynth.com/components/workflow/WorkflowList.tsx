@@ -23,6 +23,24 @@ export default function WorkflowList() {
     return () => document.removeEventListener("keydown", down);
   }, [runWorkflow]);
 
+  const NewBlockButton = () => {
+    return (
+      <Button
+        size="lg"
+        variant="outline"
+        disabled={running}
+        onClick={() => {
+          // dispatch({
+          //   type: "ADD_BLOCK",
+          //   id: Date.now(),
+          // });
+        }}
+      >
+        New block <Plus className="ml-1 w-4 h-4" />
+      </Button>
+    );
+  };
+
   return (
     <ul className="flex flex-col gap-3">
       {blocks.map((block: any) => (
@@ -34,46 +52,45 @@ export default function WorkflowList() {
           )}
         </li>
       ))}
-      {blocks.length === 0 ? (
-        <div className="text-gray-600 text-center w-full px-4 py-24 rounded-xl border bg-white">
-          No blocks. Add a block to get started.
-        </div>
-      ) : (
-        <>
-          <Button
-            onClick={async () => {
-              await runWorkflow();
-            }}
-            size="lg"
-            disabled={running}
-            className="flex flex-row justify-between"
-          >
-            <div className="w-[44px]" />
-            <div className="flex flex-row items-center gap-2">
-              Run {running && <LoaderIcon className="animate-spin w-4 h-4" />}
+      <>
+        {blocks.length === 0 ? (
+          <>
+            <div className="text-gray-600 text-center w-full px-4 py-24 rounded-xl border bg-white">
+              No blocks. Add a block to get started.
             </div>
+            <NewBlockButton />
+          </>
+        ) : (
+          <>
+            <div className="w-full flex flex-row gap-3">
+              <NewBlockButton />
+              <Button
+                onClick={async () => {
+                  await runWorkflow();
+                }}
+                size="lg"
+                disabled={running}
+                className="flex flex-row justify-between flex-1"
+              >
+                <div className="w-[44px] xs:block hidden" />
+                <div className="flex flex-row items-center justify-center gap-2 xs:w-auto w-full">
+                  Run{" "}
+                  {running && <LoaderIcon className="animate-spin w-4 h-4" />}
+                </div>
 
-            <div className="flex item-center gap-1">
-              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
-                ⌘
-              </kbd>
-              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
-                ↩
-              </kbd>
+                <div className="xs:flex item-center gap-1 hidden">
+                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                    ⌘
+                  </kbd>
+                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                    ↩
+                  </kbd>
+                </div>
+              </Button>
             </div>
-          </Button>
-          <Button
-            variant={"outline"}
-            onClick={() => {
-              dispatch({
-                type: "RESET_WORKFLOW",
-              });
-            }}
-          >
-            Reset workflow
-          </Button>
-        </>
-      )}
+          </>
+        )}
+      </>
     </ul>
   );
 }

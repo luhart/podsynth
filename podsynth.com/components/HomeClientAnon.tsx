@@ -8,8 +8,9 @@ import { Provider, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { Copy, CopyCheck, LoaderIcon, Minus, Plus } from "lucide-react";
 import { WorkflowProvider } from "@/lib/WorkflowContext";
-import AddBlock from "@/lib/AddBlock";
+import AddBlock from "@/components/workflow/WorkflowHeader";
 import WorkflowList from "./workflow/WorkflowList";
+import WorkFlowHeader from "@/components/workflow/WorkflowHeader";
 
 const servicesAtom = atomWithStorage("services", [
   {
@@ -104,7 +105,7 @@ function HomeClientAnon() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="font-medium tracking-tight" id="">
+        <div className="font-semibold tracking-tight">
           Services
         </div>
         {/* service toggles */}
@@ -156,12 +157,7 @@ function HomeClientAnon() {
 
       <div className="flex flex-col gap-3 w-full">
         <WorkflowProvider>
-          <div className="flex flex-row gap-2 items-center justify-between">
-            <div className="font-medium tracking-tight">Workflow</div>
-            {/* <div className="h-[1px] flex-1 bg-gray-200" /> */}
-            {/* <CommandDialogDemo /> */}
-          </div>
-          <AddBlock />
+          <WorkFlowHeader />
           <WorkflowList />
         </WorkflowProvider>
       </div>
