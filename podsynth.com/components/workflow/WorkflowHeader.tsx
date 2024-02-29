@@ -1,8 +1,9 @@
-import { useWorkflowDispatch } from "../../lib/WorkflowContext";
+import { useWorkflow, useWorkflowDispatch } from "../../lib/WorkflowContext";
 import { Button } from "@/components/ui/button";
 
 export default function WorkFlowHeader() {
   const dispatch = useWorkflowDispatch();
+  const { blocks } = useWorkflow();
 
   return (
     <>
@@ -12,6 +13,7 @@ export default function WorkFlowHeader() {
         <Button
           variant={"outline"}
           size={"sm"}
+          disabled={!blocks || blocks.length === 0}
           onClick={() => {
             dispatch({
               type: "RESET_WORKFLOW",

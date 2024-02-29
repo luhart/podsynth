@@ -11,6 +11,7 @@ import { WorkflowProvider } from "@/lib/WorkflowContext";
 import AddBlock from "@/components/workflow/WorkflowHeader";
 import WorkflowList from "./workflow/WorkflowList";
 import WorkFlowHeader from "@/components/workflow/WorkflowHeader";
+import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
 const servicesAtom = atomWithStorage("services", [
   {
@@ -83,20 +84,20 @@ function HomeClientAnon() {
     <div className="flex flex-col max-w-xl w-full p-4 gap-12" id="preview">
       {/* label */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-sm">
           <div className="text-lg font-bold tracking-tight">Preview</div>
-          <div className="text-gray-600 text-sm">
+          <div className="">
             Connect third party services to start adding to blocks to your
             canvas. Your keys are kept in local storage. All calls to third
             parties happen between your browser and the third party service.
           </div>
-          <div className="text-gray-600 text-sm">
+          <div className="">
             In the beta you won&apos;t need to enter any keys. We will provide
             these integrations for you. We will also provide a way to publish
             your workflows and share them with others.
           </div>
         </div>
-        <div className="text-gray-600 text-sm px-3 py-4 border bg-white">
+        <div className="px-3 py-4 border bg-white text-sm">
           The following example grabs the five most recent items from an RSS
           feed, creates a readable summary using{" "}
           <code>mixtral-8x7b-instruct</code>, and pipes the output to an
@@ -105,14 +106,11 @@ function HomeClientAnon() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="font-semibold tracking-tight">
-          Services
-        </div>
+        <div className="font-semibold tracking-tight">Services</div>
         {/* service toggles */}
-        <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
+        {/* <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
           {services.map((service) => (
             <div key={service.name} className="flex flex-col gap-2">
-              {/* badge toggle  */}
               <Button
                 size="sm"
                 className="rounded-full px-4 py-2"
@@ -131,7 +129,29 @@ function HomeClientAnon() {
               </Button>
             </div>
           ))}
-        </div>
+        </div> */}
+        <ToggleGroup
+          variant="outline"
+          className="flex flex-row gap-1 items-center justify-start flex-wrap"
+          type="multiple"
+          value={
+            services.filter((s) => s.enabled).map((s) => s.name) as string[]
+          }
+          onValueChange={(value) => {
+            setServices((prev) =>
+              prev.map((s) => ({
+                ...s,
+                enabled: value.includes(s.name),
+              }))
+            ); 
+          }}
+        >
+          {services.map((service) => (
+            <ToggleGroupItem key={service.name} value={service.name} size="sm">
+              {service.name}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
         {services.some((s) => s.enabled) && (
           <div className="flex flex-col gap-6 border rounded-sm px-4 py-6 mt-2 bg-white">
             {services.map(
