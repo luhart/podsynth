@@ -7,7 +7,6 @@ import { CommandDialogDemo } from "./AppCmd";
 import { Provider, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { Copy, CopyCheck, LoaderIcon, Minus, Plus } from "lucide-react";
-import { parseRssSource } from "@/utils/utility-blocks";
 import { WorkflowProvider } from "@/lib/WorkflowContext";
 import AddBlock from "@/lib/AddBlock";
 import WorkflowList from "./workflow/WorkflowList";
@@ -78,40 +77,22 @@ const initialWorkflow = {
 
 function HomeClientAnon() {
   const [services, setServices] = useAtom(servicesAtom);
-  const [running, setRunning] = useState(false);
-
-  const [rssFeedUrl, setRssFeedUrl] = useState("https://techmeme.com/feed.xml");
-  const [rssNumItems, setRssNumItems] = useState(5);
-  const [rssResult, setRssResult] = useState<string | null>(null);
-  const [rssResultTime, setRssResultTime] = useState<number | null>(null);
-  const [copied, setCopied] = useState<boolean>(false);
-
-  const [error, setError] = useState<string | null>(null);
-
-  const runWorkflow = async () => {
-    setRssResult(null);
-    if (rssNumItems < 1) {
-      setError("Error in Parse RSS Utility: numItems must be greater than 0");
-      return;
-    }
-    if (rssNumItems > 10) {
-      setError("Error in Parse RSS Utility: numItems 10 or less.");
-      return;
-    }
-    const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
-    setRssResult(rssResult);
-  };
 
   return (
     <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
       {/* label */}
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <div className="text-lg font-bold tracking-tight">Preview</div>
           <div className="text-gray-600 text-sm">
             Connect third party services to start adding to blocks to your
             canvas. Your keys are kept in local storage. All calls to third
             parties happen between your browser and the third party service.
+          </div>
+          <div className="text-gray-600 text-sm">
+            In the beta you won&apos;t need to enter any keys. We will provide
+            these integrations for you. We will also provide a way to publish
+            your workflows and share them with others.
           </div>
         </div>
         <div className="text-gray-600 text-sm px-3 py-4 border bg-white">
@@ -176,9 +157,9 @@ function HomeClientAnon() {
       <div className="flex flex-col gap-3 w-full">
         <WorkflowProvider>
           <div className="flex flex-row gap-2 items-center justify-between">
-            <div className="font-medium tracking-tight">Blocks</div>
-            <div className="h-[1px] flex-1 bg-gray-200" />
-            <CommandDialogDemo />
+            <div className="font-medium tracking-tight">Workflow</div>
+            {/* <div className="h-[1px] flex-1 bg-gray-200" /> */}
+            {/* <CommandDialogDemo /> */}
           </div>
           <AddBlock />
           <WorkflowList />

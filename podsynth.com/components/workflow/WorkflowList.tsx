@@ -218,7 +218,7 @@ function RssBlockItem({ block }: { block: Block }) {
           </div>
         </div>
       </div>
-      {block.result && (
+      {block.result && !block.result.error && (
         <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
           <div className="text-sm text-gray-600 font-medium">
             Finished in {block.result.executionTime}ms.
@@ -244,6 +244,15 @@ function RssBlockItem({ block }: { block: Block }) {
                 <Copy className="w-4 h-4 text-gray-600" />
               )}
             </Button>
+          </div>
+        </div>
+      )}
+      {block.result && block.result.error && (
+        <div className="flex flex-col border bg-red-50 rounded-xl px-4 py-5 gap-2">
+          <div className="flex flex-row gap-1 items-center">
+            <div className="text-xs text-red-600 overflow-hidden max-h-[4.5rem]">
+              <code className="line-clamp-3">{block.result.error}</code>
+            </div>
           </div>
         </div>
       )}

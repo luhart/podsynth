@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useState,
 } from "react";
-import { ResultType, rssUtilityBlockFunction } from "./Blocks";
+import { ResultType, rssUtilityBlockFunction } from "./block-functions";
 
 export type Block = {
   id: number;
@@ -72,6 +72,9 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
           id: block.id,
           result: result,
         });
+        if (result.error) {
+          break;
+        }
       }
     }
     setRunning(false);
