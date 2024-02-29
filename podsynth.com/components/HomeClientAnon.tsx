@@ -80,7 +80,7 @@ function HomeClientAnon() {
   const [services, setServices] = useAtom(servicesAtom);
 
   return (
-    <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
+    <div className="flex flex-col max-w-xl w-full p-4 gap-12" id="preview">
       {/* label */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
