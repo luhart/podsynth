@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { CommandDialogDemo } from "./AppCmd";
-import { Provider, atom, useAtom } from "jotai";
+import { Provider, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { Copy, CopyCheck, LoaderIcon, Minus, Plus } from "lucide-react";
 import { parseRssSource } from "@/utils/utility-blocks";
+import { WorkflowProvider } from "@/lib/WorkflowContext";
+import AddBlock from "@/lib/AddBlock";
+import WorkflowList from "./workflow/WorkflowList";
 
 const servicesAtom = atomWithStorage("services", [
   {
@@ -51,6 +54,28 @@ const servicesAtom = atomWithStorage("services", [
 // }
 // const blocksAtom = atomWithStorage("blocks", []);
 
+const initialWorkflow = {
+  name: "RSS to Audio Summary",
+  description:
+    "This initial example grabs recent items from an RSS feed and creates an audio digest. It uses OpenRouter to create a summary of the items and ElevenLabs to generate the audio.",
+  blocks: [
+    {
+      name: "Parse RSS feed",
+      type: "utility",
+      args: [
+        { label: "source", type: "text" },
+        { label: "numItems", type: "number", min: 1, max: 10 },
+      ],
+      result: {
+        executionTime: 324,
+        output: "This is the RSS utiltiy block output",
+        error: null,
+      },
+    },
+  ],
+  // blockResults: []
+};
+
 function HomeClientAnon() {
   const [services, setServices] = useAtom(servicesAtom);
   const [running, setRunning] = useState(false);
@@ -76,43 +101,6 @@ function HomeClientAnon() {
     const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
     setRssResult(rssResult);
   };
-
-  useEffect(() => {
-    const callRunWorkFlow = async () => {
-      setRunning(true);
-      setError(null);
-      setRssResult(null);
-      if (rssNumItems < 1) {
-        setError("Error in Parse RSS Utility: numItems must be greater than 0");
-        setRunning(false);
-        return;
-      }
-      if (rssNumItems > 10) {
-        setError("Error in Parse RSS Utility: numItems 10 or less.");
-        setRunning(false);
-        return;
-      }
-      try {
-        const start = performance.now();
-        const rssResult = await parseRssSource(rssFeedUrl, rssNumItems);
-        const end = performance.now();
-        setRssResult(rssResult);
-        setRssResultTime(end - start);
-      } catch (error) {
-        setError("Failed to parse RSS feed.");
-      }
-      setRunning(false);
-    };
-
-    const down = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-        callRunWorkFlow();
-      }
-    };
-
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, [rssFeedUrl, rssNumItems]);
 
   return (
     <div className="flex flex-col max-w-xl w-full p-4 gap-12 " id="preview">
@@ -184,127 +172,17 @@ function HomeClientAnon() {
           </div>
         )}
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-row gap-2 items-center justify-between">
-          <div className="font-medium tracking-tight">Blocks</div>
-          <div className="h-[1px] flex-1 bg-gray-200" />
-          <CommandDialogDemo />
-        </div>
-        <div className="flex flex-col gap-3 w-full">
-          <div className="flex flex-col gap-3 border px-4 py-6 bg-white rounded-sm">
-            <div className="flex flex-row justify-between items-start">
-              <div>
-                <div className="font-medium">Parse RSS feed (utility)</div>
-                <div className="text-gray-600 text-sm">
-                  Grabs the most recent &#123;numItems&#125; from an RSS feed
-                  &#123;source&#125;.
-                </div>
-              </div>
 
-              <Button size="sm" variant="secondary">
-                Edit
-              </Button>
-            </div>
-
-            <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-600 font-medium">
-                  source
-                </label>
-                <Input
-                  value={rssFeedUrl}
-                  onChange={(e) => setRssFeedUrl(e.target.value)}
-                  disabled={running}
-                  className="bg-white"
-                  placeholder={`Enter an RSS URL`}
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <label className="text-sm text-gray-600 font-medium">
-                  numItems
-                </label>
-                <div className="flex flex-row items-center gap-1">
-                  <Input
-                    value={rssNumItems}
-                    readOnly
-                    type="number"
-                    className="bg-white"
-                    disabled={running}
-                    placeholder={`5`}
-                  />
-                  <Button
-                    variant="outline"
-                    className="px-3"
-                    disabled={running || rssNumItems <= 1}
-                    onClick={() => setRssNumItems((prev) => prev - 1)}
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="px-3"
-                    disabled={running || rssNumItems >= 10}
-                    onClick={() => setRssNumItems((prev) => prev + 1)}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-            {rssResult && (
-              <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
-                <div className="text-sm text-gray-600 font-medium">
-                  Finished in {rssResultTime}ms.
-                </div>
-                <div className="flex flex-row gap-1 items-center">
-                  <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-                    <code className="line-clamp-3">{rssResult}</code>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="shrink-0"
-                    onClick={() => {
-                      navigator.clipboard.writeText(rssResult || "");
-                      setCopied(true);
-                    }}
-                  >
-                    {copied ? (
-                      <CopyCheck className="w-4 h-4 text-gray-600" />
-                    ) : (
-                      <Copy className="w-4 h-4 text-gray-600" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            )}
+      <div className="flex flex-col gap-3 w-full">
+        <WorkflowProvider>
+          <div className="flex flex-row gap-2 items-center justify-between">
+            <div className="font-medium tracking-tight">Blocks</div>
+            <div className="h-[1px] flex-1 bg-gray-200" />
+            <CommandDialogDemo />
           </div>
-          <Button
-            onClick={async () => {
-              setRunning(true);
-              await runWorkflow();
-              setRunning(false);
-            }}
-            size="lg"
-            disabled={running}
-            className="flex flex-row justify-between"
-          >
-            <div className="w-[44px]"/>
-            <div className="flex flex-row items-center gap-2">
-              Run{" "}
-              {running && <LoaderIcon className="animate-spin w-4 h-4" />}
-            </div>
-
-            <div className="flex item-center gap-1">
-              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
-                ⌘
-              </kbd>
-              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
-                ↩
-              </kbd>
-            </div>
-          </Button>
-        </div>
+          <AddBlock />
+          <WorkflowList />
+        </WorkflowProvider>
       </div>
     </div>
   );
@@ -329,6 +207,26 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
     </div>
   );
 };
+
+// type Block = UtilityBlock | ServiceBlock;
+
+// type ActionArg = {
+//   [key: string]: string | number | boolean;
+// };
+
+// type UtilityBlock = {
+//   name: string;
+//   description: string;
+//   args: ActionArg[];
+//   action: (args: ActionArg) => void;
+// }
+
+// type ServiceBlock = {
+//   name: string;
+//   description: string;
+//   args: ActionArg[];
+//   action: (args: ActionArg) => void;
+// }
 
 export const HomeClientAnonWrapped = () => {
   return (
