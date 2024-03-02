@@ -79,10 +79,10 @@ export default function WorkflowList() {
                 </div>
 
                 <div className="xs:flex item-center gap-1 hidden">
-                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
                     ⌘
                   </kbd>
-                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-gray-800 font-mono text font-medium text-secondary opacity-100">
+                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
                     ↩
                   </kbd>
                 </div>
@@ -136,143 +136,149 @@ function RssBlockItem({ block }: { block: Block }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4 border px-4 py-6 bg-white rounded-sm">
-      <div className="flex flex-row justify-between items-start">
-        <div>
-          <div className="font-medium">Parse RSS feed [utility]</div>
-          <div className="text-gray-600 text-sm mt-1">
-            Grabs the most recent &#123;numItems&#125; from an RSS feed
-            &#123;source&#125;.
+    <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-gray-100 rounded-xl border">
+      <div className="flex flex-col w-full gap-2">
+        <div className="flex flex-row justify-between items-start pb-4">
+          <div className="flex flex-col gap-1">
+            <div className="font-medium tracking-tight">Parse RSS feed [utility]</div>
+            <div className="text-gray-600 text-sm">
+              Grabs the most recent &#123;numItems&#125; from an RSS feed
+              &#123;source&#125;.
+            </div>
           </div>
+
+          <Button size="sm" variant="outline">
+            Edit
+          </Button>
         </div>
 
-        <Button size="sm" variant="outline">
-          Edit
-        </Button>
-      </div>
-
-      <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-4">
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600 font-medium">source</label>
-          <Input
-            value={block.args.source.value}
-            type={block.args.source.type}
-            disabled={block.status === "running"}
-            onChange={(e) => {
-              dispatch({
-                type: "EDIT_UTILITY_BLOCK",
-                block: {
-                  ...block,
-                  args: {
-                    ...block.args,
-                    source: {
-                      ...block.args.source,
-                      value: e.target.value,
-                    },
-                  },
-                },
-              });
-            }}
-            className="bg-white"
-            placeholder={`Enter an RSS URL`}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm text-gray-600 font-medium">numItems</label>
-          <div className="flex flex-row items-center gap-1">
+        <div className="flex flex-col gap-3 py-5 border rounded-lg bg-gray-50">
+          <div className="flex flex-col gap-1 px-4">
+            <label className="text-xs text-gray-600 font-semibold font-mono">
+              source
+            </label>
             <Input
-              value={block.args.numItems.value}
-              readOnly
-              type={block.args.numItems.type}
-              className="bg-white"
+              value={block.args.source.value}
+              type={block.args.source.type}
               disabled={running}
-              placeholder={`5`}
+              onChange={(e) => {
+                dispatch({
+                  type: "EDIT_UTILITY_BLOCK",
+                  block: {
+                    ...block,
+                    args: {
+                      ...block.args,
+                      source: {
+                        ...block.args.source,
+                        value: e.target.value,
+                      },
+                    },
+                  },
+                });
+              }}
+              className="bg-white"
+              placeholder={`Enter an RSS URL`}
             />
-            <Button
-              variant="outline"
-              className="px-3"
-              disabled={running || block.args.numItems.value <= 1}
-              onClick={() => {
-                dispatch({
-                  type: "EDIT_UTILITY_BLOCK",
-                  block: {
-                    ...block,
-                    args: {
-                      ...block.args,
-                      numItems: {
-                        ...block.args.numItems,
-                        value: block.args.numItems.value - 1,
+          </div>
+          <div className="flex flex-col gap-1 px-4">
+            <label className="text-xs text-gray-600 font-semibold font-mono">
+              numItems
+            </label>
+            <div className="flex flex-row items-center gap-1">
+              <Input
+                value={block.args.numItems.value}
+                readOnly
+                type={block.args.numItems.type}
+                className="bg-white"
+                disabled={running}
+                placeholder={`5`}
+              />
+              <Button
+                variant="outline"
+                className="px-3"
+                disabled={running || block.args.numItems.value <= 1}
+                onClick={() => {
+                  dispatch({
+                    type: "EDIT_UTILITY_BLOCK",
+                    block: {
+                      ...block,
+                      args: {
+                        ...block.args,
+                        numItems: {
+                          ...block.args.numItems,
+                          value: block.args.numItems.value - 1,
+                        },
                       },
                     },
-                  },
-                });
-              }}
-            >
-              <Minus className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="px-3"
-              disabled={running || block.args.numItems.value >= 10}
-              onClick={() => {
-                dispatch({
-                  type: "EDIT_UTILITY_BLOCK",
-                  block: {
-                    ...block,
-                    args: {
-                      ...block.args,
-                      numItems: {
-                        ...block.args.numItems,
-                        value: block.args.numItems.value + 1,
+                  });
+                }}
+              >
+                <Minus className="w-4 h-4 text-gray-700" />
+              </Button>
+              <Button
+                variant="outline"
+                className="px-3"
+                disabled={running || block.args.numItems.value >= 10}
+                onClick={() => {
+                  dispatch({
+                    type: "EDIT_UTILITY_BLOCK",
+                    block: {
+                      ...block,
+                      args: {
+                        ...block.args,
+                        numItems: {
+                          ...block.args.numItems,
+                          value: block.args.numItems.value + 1,
+                        },
                       },
                     },
-                  },
-                });
-              }}
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
+                  });
+                }}
+              >
+                <Plus className="w-4 h-4 text-gray-700" />
+              </Button>
+            </div>
           </div>
         </div>
+        {block.result && !block.result.error && (
+          <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
+            <div className="text-sm text-gray-600 font-medium">
+              Finished in {block.result.executionTime}ms.
+            </div>
+            <div className="flex flex-row gap-1 items-center">
+              <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
+                <code className="line-clamp-3">{block.result.output}</code>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    block.result ? block.result.output || "" : ""
+                  );
+                  setCopied(true);
+                }}
+              >
+                {copied ? (
+                  <CopyCheck className="w-4 h-4 text-gray-600" />
+                ) : (
+                  <Copy className="w-4 h-4 text-gray-600" />
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+        {block.result && block.result.error && (
+          <div className="flex flex-col border border-red-200 bg-red-50 rounded-xl px-4 py-5 gap-2">
+            <div className="flex flex-row gap-1 items-center">
+              <div className="text-xs text-red-600 overflow-hidden max-h-[4.5rem]">
+                <code className="line-clamp-3">{block.result.error}</code>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      {block.result && !block.result.error && (
-        <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
-          <div className="text-sm text-gray-600 font-medium">
-            Finished in {block.result.executionTime}ms.
-          </div>
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-              <code className="line-clamp-3">{block.result.output}</code>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  block.result ? block.result.output || "" : ""
-                );
-                setCopied(true);
-              }}
-            >
-              {copied ? (
-                <CopyCheck className="w-4 h-4 text-gray-600" />
-              ) : (
-                <Copy className="w-4 h-4 text-gray-600" />
-              )}
-            </Button>
-          </div>
-        </div>
-      )}
-      {block.result && block.result.error && (
-        <div className="flex flex-col border border-red-200 bg-red-50 rounded-xl px-4 py-5 gap-2">
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-red-600 overflow-hidden max-h-[4.5rem]">
-              <code className="line-clamp-3">{block.result.error}</code>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
