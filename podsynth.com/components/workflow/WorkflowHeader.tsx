@@ -8,7 +8,7 @@ export default function WorkFlowHeader() {
   return (
     <>
       <div className="flex flex-row gap-2 items-center justify-between">
-        <div className="font-semibold tracking-tight">Workflow</div>
+        <div className="font-semibold tracking-tight text-lg">Workflow</div>
         <div className="h-[1px] flex-1 bg-gray-200" />
         <Button
           variant={"outline"}

@@ -136,7 +136,7 @@ function RssBlockItem({ block }: { block: Block }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-gray-100 rounded-xl border">
+    <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-white bg-cross rounded-xl border">
       <div className="flex flex-col w-full gap-2">
         <div className="flex flex-row justify-between items-start pb-4">
           <div className="flex flex-col gap-1">
@@ -154,7 +154,7 @@ function RssBlockItem({ block }: { block: Block }) {
           </Button>
         </div>
 
-        <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-50">
+        <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
           <div className="flex flex-col gap-1 px-4">
             <label className="text-xs text-gray-600 font-semibold font-mono">
               source
@@ -178,7 +178,7 @@ function RssBlockItem({ block }: { block: Block }) {
                   },
                 });
               }}
-              // className="bg-white"
+              className="bg-white"
               placeholder={`Enter an RSS URL`}
             />
           </div>
@@ -192,7 +192,7 @@ function RssBlockItem({ block }: { block: Block }) {
                 value={block.args.numItems.value}
                 readOnly
                 type={block.args.numItems.type}
-                className="focus-visible:ring-0"
+                className="focus-visible:ring-0 bg-white"
                 disabled={running}
                 placeholder={`5`}
               />
@@ -244,7 +244,7 @@ function RssBlockItem({ block }: { block: Block }) {
           </div>
         </div>
         {block.result && !block.result.error && (
-          <div className="flex flex-col bg-gray-50 rounded-xl px-4 py-5 gap-2">
+          <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
             <div className="text-sm text-gray-600 font-medium">
               Finished in {block.result.executionTime}ms.
             </div>

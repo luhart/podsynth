@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer";
 
 export default async function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center border-t bg-gray-50 bg-cross">
+    <main className="flex min-h-screen flex-col items-center border-t bg-gray-50">
       <div className="max-w-3xl w-full border-l border-r flex flex-col items-center py-12">
         <div className="flex flex-col justify-start max-w-xl w-full p-4 gap-12 ">
           <div className="flex flex-col gap-2">
