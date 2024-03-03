@@ -140,7 +140,9 @@ function RssBlockItem({ block }: { block: Block }) {
       <div className="flex flex-col w-full gap-2">
         <div className="flex flex-row justify-between items-start pb-4">
           <div className="flex flex-col gap-1">
-            <div className="font-medium tracking-tight">Parse RSS feed [utility]</div>
+            <div className="font-medium tracking-tight">
+              Parse RSS feed [utility]
+            </div>
             <div className="text-gray-600 text-sm">
               Grabs the most recent &#123;numItems&#125; from an RSS feed
               &#123;source&#125;.
@@ -152,7 +154,7 @@ function RssBlockItem({ block }: { block: Block }) {
           </Button>
         </div>
 
-        <div className="flex flex-col gap-3 py-5 border rounded-lg bg-gray-50">
+        <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-50">
           <div className="flex flex-col gap-1 px-4">
             <label className="text-xs text-gray-600 font-semibold font-mono">
               source
@@ -176,7 +178,7 @@ function RssBlockItem({ block }: { block: Block }) {
                   },
                 });
               }}
-              className="bg-white"
+              // className="bg-white"
               placeholder={`Enter an RSS URL`}
             />
           </div>
@@ -185,11 +187,12 @@ function RssBlockItem({ block }: { block: Block }) {
               numItems
             </label>
             <div className="flex flex-row items-center gap-1">
+              
               <Input
                 value={block.args.numItems.value}
                 readOnly
                 type={block.args.numItems.type}
-                className="bg-white"
+                className="focus-visible:ring-0"
                 disabled={running}
                 placeholder={`5`}
               />
@@ -241,7 +244,7 @@ function RssBlockItem({ block }: { block: Block }) {
           </div>
         </div>
         {block.result && !block.result.error && (
-          <div className="flex flex-col border bg-gray-50 rounded-xl px-4 py-5 gap-2">
+          <div className="flex flex-col bg-gray-50 rounded-xl px-4 py-5 gap-2">
             <div className="text-sm text-gray-600 font-medium">
               Finished in {block.result.executionTime}ms.
             </div>
