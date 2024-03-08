@@ -253,6 +253,23 @@ const initialBlocks: Block[] = [
     result: null,
   },
   // {
+  //   id: 2,
+  //   name: "Create Audio (ElevenLabs)",
+  //   blockType: "ai",
+  //   status: "complete",
+  //   description: "Generates an audio file from {text} using {model}.",
+  //   args: {
+  //     text: {
+  //       type: "text",
+  //       value: "This is the text to be converted to audio",
+  //     },
+  //     model: "ElevenLabs",
+  //     ELEVENLABS_API_KEY: "",
+  //   },
+  //   blockAction: null,
+  //   result: null,
+  // },
+  // {
   //   id: 1,
   //   name: "Create Summary (OpenRouter)",
   //   blockType: "service",

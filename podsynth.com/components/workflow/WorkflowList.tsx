@@ -347,7 +347,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
             </label>
             {block.args.messages.map((message: any, index: number) => (
               <div key={index} className="flex flex-row gap-2 justify-between items-center w-full">
-                <div className="flex flex-col gap-1 my-2 flex-1">
+                <div className="flex flex-col gap-1 mb-2 flex-1">
                   <Select
                     onValueChange={(value) => {
                       dispatch({
