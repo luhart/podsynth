@@ -452,87 +452,47 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
             >
               Add instruction <Plus className="ml-1 w-4 h-4" />
             </Button>
-            {/* <Input
-              value={block.args.source.value}
-              type={block.args.source.type}
-              disabled={running}
-              onChange={(e) => {
+          </div>
+          <div className="flex flex-col gap-1 px-4">
+            <label className="text-xs text-gray-600 font-semibold font-mono">
+              model
+            </label>
+            <Select
+              onValueChange={(value) => {
                 dispatch({
                   type: "EDIT_BLOCK",
                   block: {
                     ...block,
                     args: {
                       ...block.args,
-                      source: {
-                        ...block.args.source,
-                        value: e.target.value,
-                      },
+                      model: value,
                     },
                   },
                 });
               }}
-              className="bg-white"
-              placeholder={`Enter an RSS URL`}
-            /> */}
-          </div>
-          <div className="flex flex-col gap-1 px-4">
-            <label className="text-xs text-gray-600 font-semibold font-mono">
-              numItems
-            </label>
-            <div className="flex flex-row items-center gap-1">
-              {/* <Input
-                value={block.args.numItems.value}
-                readOnly
-                type={block.args.numItems.type}
-                className="focus-visible:ring-0 bg-white"
-                disabled={running}
-                placeholder={`5`}
-              />
-              <Button
-                variant="outline"
-                className="px-3"
-                disabled={running || block.args.numItems.value <= 1}
-                onClick={() => {
-                  dispatch({
-                    type: "EDIT_BLOCK",
-                    block: {
-                      ...block,
-                      args: {
-                        ...block.args,
-                        numItems: {
-                          ...block.args.numItems,
-                          value: block.args.numItems.value - 1,
-                        },
-                      },
-                    },
-                  });
-                }}
-              >
-                <Minus className="w-4 h-4 text-gray-700" />
-              </Button>
-              <Button
-                variant="outline"
-                className="px-3"
-                disabled={running || block.args.numItems.value >= 10}
-                onClick={() => {
-                  dispatch({
-                    type: "EDIT_BLOCK",
-                    block: {
-                      ...block,
-                      args: {
-                        ...block.args,
-                        numItems: {
-                          ...block.args.numItems,
-                          value: block.args.numItems.value + 1,
-                        },
-                      },
-                    },
-                  });
-                }}
-              >
-                <Plus className="w-4 h-4 text-gray-700" />
-              </Button> */}
-            </div>
+              value={block.args.model}
+            >
+              <SelectTrigger className="w-full bg-white">
+                <SelectValue placeholder="Select a model" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Model</SelectLabel>
+                  <SelectItem value="mistralai/mixtral-8x7b-instruct">Mistral: Mixtral 8x7b Instruct</SelectItem>
+                  <SelectItem value="mistralai/mistral-7b-instruct">Mistral 7B Instruct</SelectItem>
+                  <SelectItem value="gryphe/mythomax-l2-13b">MythoMax 13B</SelectItem>
+                  <SelectItem value="google/gemini-pro">Google: Gemini Pro 1.0</SelectItem>
+                  <SelectItem value="mistralai/mistral-tiny">Mistral: Mistral Tiny</SelectItem>
+                  <SelectItem value="anthropic/claude-3-sonnet:beta">Anthropic: Claude 3 Sonnet</SelectItem>
+                  <SelectItem value="mistralai/mistral-medium">Mistral: Mistral Medium</SelectItem>
+                  <SelectItem value="anthropic/claude-3-opus:beta">Anthropic: Claude 3 Opus</SelectItem>
+                  <SelectItem value="nousresearch/nous-hermes-2-mixtral-8x7b-dpo">Nous: Hermes 2 Mixtral 8x7B DPO</SelectItem>
+                  <SelectItem value="openai/gpt-3.5-turbo-0125">OpenAI: GPT-3.5 Turbo 16k</SelectItem>
+                  <SelectItem value="openai/gpt-4-turbo-preview">OpenAI: GPT-5</SelectItem>
+                  <SelectItem value="nousresearch/nous-hermes-llama2-13b">Nous: Hermes 13B</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         {block.result && !block.result.error && (

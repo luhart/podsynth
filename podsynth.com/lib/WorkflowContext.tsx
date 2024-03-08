@@ -232,7 +232,7 @@ const initialBlocks: Block[] = [
     name: "Create Summary (OpenRouter)",
     blockType: "ai",
     status: "complete",
-    description: "Summarizes {text} based on {instructions} using {model}. Use {previousBlockResult} with left & right braces to use the output of the previous block.",
+    description: "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
     args: {
       messages: [
         {
