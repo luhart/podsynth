@@ -1,19 +1,14 @@
 "use client";
 
-import { useEffect, useReducer, useState } from "react";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { CommandDialogDemo } from "./AppCmd";
 import { Provider, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { Copy, CopyCheck, LoaderIcon, Minus, Plus } from "lucide-react";
 import { WorkflowProvider } from "@/lib/WorkflowContext";
-import AddBlock from "@/components/workflow/WorkflowHeader";
 import WorkflowList from "./workflow/WorkflowList";
 import WorkFlowHeader from "@/components/workflow/WorkflowHeader";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 
-const servicesAtom = atomWithStorage("services", [
+export const servicesAtom = atomWithStorage("services", [
   {
     name: "OpenRouter",
     key: "",
@@ -45,6 +40,8 @@ const servicesAtom = atomWithStorage("services", [
     enabled: false,
   },
 ]);
+
+const servicesNotImplemented = ["OpenAI", "perplexity", "neets", "PlayHT"];
 
 // type BlockType = "utility" | "service" | "input" | "output";
 // type Block = {
@@ -143,11 +140,16 @@ function HomeClientAnon() {
                 ...s,
                 enabled: value.includes(s.name),
               }))
-            ); 
+            );
           }}
         >
           {services.map((service) => (
-            <ToggleGroupItem key={service.name} value={service.name} size="sm">
+            <ToggleGroupItem
+              key={service.name}
+              value={service.name}
+              size="sm"
+              disabled={servicesNotImplemented.includes(service.name)}
+            >
               {service.name}
             </ToggleGroupItem>
           ))}
@@ -205,25 +207,6 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
   );
 };
 
-// type Block = UtilityBlock | ServiceBlock;
-
-// type ActionArg = {
-//   [key: string]: string | number | boolean;
-// };
-
-// type UtilityBlock = {
-//   name: string;
-//   description: string;
-//   args: ActionArg[];
-//   action: (args: ActionArg) => void;
-// }
-
-// type ServiceBlock = {
-//   name: string;
-//   description: string;
-//   args: ActionArg[];
-//   action: (args: ActionArg) => void;
-// }
 
 export const HomeClientAnonWrapped = () => {
   return (

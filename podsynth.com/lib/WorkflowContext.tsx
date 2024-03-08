@@ -5,36 +5,40 @@ import React, {
   ReactNode,
   useState,
 } from "react";
-import { ResultType, rssUtilityBlockFunction } from "./block-functions";
+import {
+  ResultType,
+  createSummary,
+  rssUtilityBlockFunction,
+} from "./block-functions";
+import { useAtom } from "jotai";
+import { servicesAtom } from "../components/HomeClientAnon";
 
 export type Block = {
-  id: number;
+  id?: number;
   name: string;
-  blockType: "utility" | "service";
+  blockType: "utility" | "ai";
   description: string | null;
   status: string;
-  fn: typeof rssUtilityBlockFunction | null;
+  blockAction: BlockAction;
   result: ResultType | null;
-  args: {
-    source: { type: "text"; value: string };
-    numItems: { type: "number"; value: number; min?: number; max?: number };
-  };
+  args: any;
 };
 
+type BlockAction =
+  | { rssParse: { fn: typeof rssUtilityBlockFunction } }
+  | { createSummary: { fn: typeof createSummary } }
+  | null;
+
 type Action =
-  // | {
-  //     type: "ADD_BLOCK";
-  //     id: number;
-  //     name: string;
-  //     blockType: "utility" | "service";
-  //     description: string;
-  //     status: string;
-  //   }
   | {
-      type: "EDIT_UTILITY_BLOCK";
+      type: "ADD_BLOCK";
       block: Block;
     }
-  | { type: "UPDATE_BLOCK_RESULT"; id: number; result: ResultType}
+  | {
+      type: "EDIT_BLOCK";
+      block: Block;
+    }
+  | { type: "UPDATE_BLOCK_RESULT"; id: number; result: ResultType }
   | { type: "REMOVE_BLOCK"; id: number }
   | { type: "RESET_WORKFLOW" };
 
@@ -58,15 +62,42 @@ interface WorkflowProviderProps {
 export function WorkflowProvider({ children }: WorkflowProviderProps) {
   const [blocks, dispatch] = useReducer(workflowReducer, initialBlocks);
   const [running, setRunning] = useState(false);
+  
+  const [services] = useAtom(servicesAtom);
 
   async function runWorkflow() {
     setRunning(true);
     for (let block of blocks) {
-      if (block.fn) {
-        const result = await block.fn(
-          block.args.source.value,
-          block.args.numItems.value
-        );
+      if (block.blockAction) {
+        let result;
+        if ("rssParse" in block.blockAction) {
+          console.log("running rssParse");
+          result = await block.blockAction.rssParse.fn(
+            block.args.source.value,
+            block.args.numItems.value
+          );
+        } else if ("createSummary" in block.blockAction) {
+          result = await block.blockAction.createSummary.fn(
+            [
+              {
+                role: "system",
+                content:
+                  "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include emojis or special characters. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
+              },
+              {
+                role: "user",
+                content:
+                  "Create a script for me from the following: " +
+                  block.args.text.value,
+              },
+            ],
+            "mistralai/mixtral-8x7b-instruct",
+            services.find((s) => s.name === "OpenRouter")?.key
+          );
+        } else {
+          throw new Error("Unknown block action");
+        }
+        if (block.id === undefined) throw new Error("Block ID is undefined");
         dispatch({
           type: "UPDATE_BLOCK_RESULT",
           id: block.id,
@@ -81,7 +112,7 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
   }
 
   return (
-    <WorkflowContext.Provider value={{blocks, running, runWorkflow}}>
+    <WorkflowContext.Provider value={{ blocks, running, runWorkflow }}>
       <WorkflowDispatchContext.Provider value={dispatch}>
         {children}
       </WorkflowDispatchContext.Provider>
@@ -111,21 +142,16 @@ function assertNever(x: never): never {
 
 function workflowReducer(blocks: Block[], action: Action): Block[] {
   switch (action.type) {
-    // case "ADD_BLOCK": {
-    //   return [
-    //     ...blocks,
-    //     {
-    //       id: action.id,
-    //       name: action.name,
-    //       blockType: action.blockType,
-    //       description: action.description || null,
-    //       status: action.status,
-    //       fn: action.name === "Parse RSS feed" ? RssUtilityBlockFunction : null,
-    //       result: null,
-    //     },
-    //   ];
-    // }
-    case "EDIT_UTILITY_BLOCK": {
+    case "ADD_BLOCK": {
+      return [
+        ...blocks,
+        {
+          ...action.block,
+          id: blocks.length,
+        },
+      ];
+    }
+    case "EDIT_BLOCK": {
       return blocks.map((block) => {
         if (block.id === action.block.id) {
           return action.block;
@@ -158,15 +184,35 @@ function workflowReducer(blocks: Block[], action: Action): Block[] {
   }
 }
 
+export const newDummyBlock: Block = {
+  name: "Parse RSS feed",
+  blockType: "utility",
+  status: "complete",
+  description: "Grabs the most recent {numItems} from an RSS feed {source}.",
+  blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
+  result: null,
+  args: {
+    source: {
+      type: "text",
+      value: "https://www.techmeme.com/feed.xml",
+    },
+    numItems: {
+      type: "number",
+      value: 5,
+      min: 1,
+      max: 10,
+    },
+  },
+};
+
 const initialBlocks: Block[] = [
   {
     id: 0,
     name: "Parse RSS feed",
     blockType: "utility",
     status: "complete",
-    description:
-      "Grabs the most recent &#123;numItems&#125; from an RSS feed &#123;source&#125;.",
-    fn: rssUtilityBlockFunction,
+    description: "Grabs the most recent {numItems} from an RSS feed {source}.",
+    blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
     result: null,
     args: {
       source: {
@@ -180,8 +226,40 @@ const initialBlocks: Block[] = [
         max: 10,
       },
     },
-    // result: "This is the RSS utiltiy block output",
   },
+  {
+    id: 1,
+    name: "Create Summary (OpenRouter)",
+    blockType: "ai",
+    status: "complete",
+    description: "Summarizes {text} based on {instructions} using {model}. Use {previousBlockResult} with left & right braces to use the output of the previous block.",
+    args: {
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include emojis or special characters. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
+        },
+        {
+          role: "user",
+          content: "Create a script for me from the following: {previousBlockResult}",
+        }, // how should I pipe in the text from the previous block?
+      ],
+      model: "mistralai/mixtral-8x7b-instruct",
+      OPENROUTER_API_KEY: "",
+    },
+    // blockAction: { createSummary: { fn: createSummary } },
+    blockAction: null,
+    result: null,
+  },
+  // {
+  //   id: 1,
+  //   name: "Create Summary (OpenRouter)",
+  //   blockType: "service",
+  //   status: "complete",
+  //   description: "Summarizes {text} based on {instructions} using model",
+  //   args: ,
+  // }
 ];
 
 const initialWorkflowMetadata = {
