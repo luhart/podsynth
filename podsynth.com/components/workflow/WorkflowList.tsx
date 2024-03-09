@@ -3,7 +3,15 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Copy, CopyCheck, LoaderIcon, Minus, Play, Plus, X } from "lucide-react";
+import {
+  Copy,
+  CopyCheck,
+  LoaderIcon,
+  Minus,
+  Play,
+  Plus,
+  X,
+} from "lucide-react";
 import { rssUtilityBlockFunction } from "@/lib/block-functions";
 import {
   Select,
@@ -189,7 +197,7 @@ function RssBlockItem({ block }: { block: Block }) {
             </div>
           </div>
 
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" disabled={running}>
             Edit
           </Button>
         </div>
@@ -339,7 +347,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
             <div className="text-gray-600 text-sm">{block.description}</div>
           </div>
 
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" disabled={running}>
             Edit
           </Button>
         </div>
@@ -356,6 +364,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
               >
                 <div className="flex flex-col gap-1 mb-2 flex-1">
                   <Select
+                    disabled={running}
                     onValueChange={(value) => {
                       dispatch({
                         type: "EDIT_BLOCK",
@@ -377,7 +386,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
                     }}
                     value={message.role}
                   >
-                    <SelectTrigger className="w-full bg-white">
+                    <SelectTrigger className="w-full bg-white" disabled={running}>
                       <SelectValue placeholder="Select a role" />
                     </SelectTrigger>
                     <SelectContent>
@@ -418,6 +427,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
                   variant="outline"
                   className="shrink-0"
                   size="icon"
+                  disabled={running}
                   onClick={() => {
                     dispatch({
                       type: "EDIT_BLOCK",
@@ -479,7 +489,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
               }}
               value={block.args.model}
             >
-              <SelectTrigger className="w-full bg-white">
+              <SelectTrigger className="w-full bg-white" disabled={running}>
                 <SelectValue placeholder="Select a model" />
               </SelectTrigger>
               <SelectContent>
@@ -586,20 +596,22 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
                 voice
               </label>
               {/* play sample button */}
-            <Button
-              variant="link"
-              size="sm"
-              className="p-0 m-0 h-auto pr-2"
-              onClick={() => {
-                const selectedVoice = voiceProfiles.find(voice => voice.id === block.args.voiceId);
-                if (selectedVoice && selectedVoice.previewUrl) {
-                  const audio = new Audio(selectedVoice.previewUrl);
-                  audio.play();
-                }
-              }}
-            >
-              sample
-            </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="p-0 m-0 h-auto pr-2"
+                onClick={() => {
+                  const selectedVoice = voiceProfiles.find(
+                    (voice) => voice.id === block.args.voiceId
+                  );
+                  if (selectedVoice && selectedVoice.previewUrl) {
+                    const audio = new Audio(selectedVoice.previewUrl);
+                    audio.play();
+                  }
+                }}
+              >
+                preview
+              </Button>
             </div>
 
             <Select
@@ -616,8 +628,9 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
                 });
               }}
               value={block.args.voiceId}
+              disabled={running}
             >
-              <SelectTrigger className="w-full bg-white">
+              <SelectTrigger className="w-full bg-white" disabled={running}>
                 <SelectValue placeholder="Select a model" />
               </SelectTrigger>
               <SelectContent>

@@ -9,7 +9,7 @@ export default async function Home() {
         <div className="flex flex-col justify-start max-w-xl w-full p-4 gap-12 ">
           <div className="flex flex-col gap-2">
             <h1 className={`text-xl font-bold w-full`}>
-              A stupid simple canvas for language and audio models.
+              A simple canvas for language and audio models.
             </h1>
             <div className="text-gray-600">
               This is a place for quickly testing out different mixes of
