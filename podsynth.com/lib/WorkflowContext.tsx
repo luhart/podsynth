@@ -16,7 +16,7 @@ import { servicesAtom } from "../components/HomeClientAnon";
 export type Block = {
   id?: number;
   name: string;
-  blockType: "utility" | "ai";
+  blockType: "utility" | "ai-text" | "ai-audio";
   description: string | null;
   status: string;
   blockAction: BlockAction;
@@ -230,7 +230,7 @@ const initialBlocks: Block[] = [
   {
     id: 1,
     name: "Create Summary (OpenRouter)",
-    blockType: "ai",
+    blockType: "ai-text",
     status: "complete",
     description: "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
     args: {
@@ -252,23 +252,20 @@ const initialBlocks: Block[] = [
     blockAction: null,
     result: null,
   },
-  // {
-  //   id: 2,
-  //   name: "Create Audio (ElevenLabs)",
-  //   blockType: "ai",
-  //   status: "complete",
-  //   description: "Generates an audio file from {text} using {model}.",
-  //   args: {
-  //     text: {
-  //       type: "text",
-  //       value: "This is the text to be converted to audio",
-  //     },
-  //     model: "ElevenLabs",
-  //     ELEVENLABS_API_KEY: "",
-  //   },
-  //   blockAction: null,
-  //   result: null,
-  // },
+  {
+    id: 2,
+    name: "Create Audio (ElevenLabs)",
+    blockType: "ai-audio",
+    status: "complete",
+    description: "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
+    args: {
+      text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
+      voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
+      ELEVENLABS_API_KEY: "",
+    },
+    blockAction: null,
+    result: null,
+  },
   // {
   //   id: 1,
   //   name: "Create Summary (OpenRouter)",
