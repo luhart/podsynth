@@ -97,6 +97,8 @@ export async function createSummary(
   messages: ChatCompletionMessageParam[],
   model: string,
   OPENROUTER_API_KEY: string | undefined,
+  blockId: number,
+  updateBlockResult: (id: number, result: ResultType) => void
 ): Promise<ResultType> {
   if (!OPENROUTER_API_KEY) {
     return {
@@ -115,11 +117,17 @@ export async function createSummary(
   });
 
   const start = performance.now();
-  const completion = await openai.chat.completions.create({
+  let result = '';
+  
+  const stream = await openai.chat.completions.create({
     model: model,
     messages: messages,
+    stream: true,
   });
-  const result = completion.choices[0].message.content;
+  for await (const part of stream) {
+    result += part.choices[0]?.delta?.content || "";
+    updateBlockResult(blockId, { output: result, status: "running", error: null, executionTime: performance.now() - start });
+  }
   const end = performance.now();
 
   if (!result) {
