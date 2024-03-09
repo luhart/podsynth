@@ -46,9 +46,9 @@ export default function WorkflowList() {
           dispatch({
             type: "ADD_BLOCK",
             block: {
+              id: blocks.length,
               name: "Parse RSS feed",
               blockType: "utility",
-              status: "complete",
               description:
                 "Grabs the most recent &#123;numItems&#125; from an RSS feed &#123;source&#125;.",
               blockAction: { rssParse: { fn: rssUtilityBlockFunction } },

@@ -14,11 +14,10 @@ import { useAtom } from "jotai";
 import { servicesAtom } from "../components/HomeClientAnon";
 
 export type Block = {
-  id?: number;
+  id: number;
   name: string;
   blockType: "utility" | "ai-text" | "ai-audio";
   description: string | null;
-  status: string;
   blockAction: BlockAction;
   result: ResultType | null;
   args: any;
@@ -71,8 +70,19 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
     for (let block of blocks) {
       if (block.blockAction) {
         let result;
+
+        dispatch({
+          type: "UPDATE_BLOCK_RESULT",
+          id: block.id,
+          result: {
+            executionTime: 0,
+            output: null,
+            error: null,
+            status: "running",
+          },
+        });
+
         if ("rssParse" in block.blockAction) {
-          console.log("running rssParse");
           result = await block.blockAction.rssParse.fn(
             block.args.source.value,
             block.args.numItems.value
@@ -80,7 +90,6 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
           resultsCopy.push(result.output || "")
         } else if ("createSummary" in block.blockAction) {
           // use result from previous block wherever {previousBlockResult} is found
-
           const messages = block.args.messages.map((m: any) => {
             if (m.content.includes("{previousBlockResult}")) {
               if (block.id === undefined)
@@ -104,7 +113,6 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
         } else {
           throw new Error("Unknown block action");
         }
-        if (block.id === undefined) throw new Error("Block ID is undefined");
         if (result) {
           dispatch({
             type: "UPDATE_BLOCK_RESULT",
@@ -193,7 +201,7 @@ function workflowReducer(blocks: Block[], action: Action): Block[] {
   }
 }
 
-export const newDummyBlock: Block = {
+export const newDummyBlock = {
   name: "Parse RSS feed",
   blockType: "utility",
   status: "complete",
@@ -219,7 +227,6 @@ const initialBlocks: Block[] = [
     id: 0,
     name: "Parse RSS feed",
     blockType: "utility",
-    status: "complete",
     description: "Grabs the most recent {numItems} from an RSS feed {source}.",
     blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
     result: null,
@@ -240,7 +247,6 @@ const initialBlocks: Block[] = [
     id: 1,
     name: "Create Summary (OpenRouter)",
     blockType: "ai-text",
-    status: "complete",
     description:
       "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
     args: {
@@ -267,7 +273,6 @@ const initialBlocks: Block[] = [
     id: 2,
     name: "Create Audio (ElevenLabs)",
     blockType: "ai-audio",
-    status: "complete",
     description:
       "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
     args: {
