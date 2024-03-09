@@ -247,31 +247,39 @@ function RssBlockItem({ block }: { block: Block }) {
         </div>
       </div>
       {block.result && !block.result.error && (
-        <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
-          <div className="text-sm text-gray-600 font-medium">
-            Finished in {block.result.executionTime}ms.
-          </div>
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-              <code className="line-clamp-3">{block.result.output}</code>
+        <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
+          {block.result.status === "running" ? (
+            <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
+              Running <LoaderIcon className="animate-spin w-4 h-4" />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  block.result ? block.result.output || "" : ""
-                );
-                setCopied(true);
-              }}
-            >
-              {copied ? (
-                <CopyCheck className="w-4 h-4 text-gray-600" />
-              ) : (
-                <Copy className="w-4 h-4 text-gray-600" />
-              )}
-            </Button>
+          ) : (
+            <div className="text-sm text-gray-600 font-medium">
+              Finished in {block.result.executionTime}ms.
+            </div>
+          )}
+          <div className="flex flex-row gap-1 items-center">
+            <div className="text-xs text-gray-600">
+              <code className="">{block.result.output}</code>
+            </div>
+            {block.result.output && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    block.result ? block.result.output || "" : ""
+                  );
+                  setCopied(true);
+                }}
+              >
+                {copied ? (
+                  <CopyCheck className="w-4 h-4 text-gray-600" />
+                ) : (
+                  <Copy className="w-4 h-4 text-gray-600" />
+                )}
+              </Button>
+            )}
           </div>
         </div>
       )}

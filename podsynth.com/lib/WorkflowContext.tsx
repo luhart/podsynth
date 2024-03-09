@@ -243,46 +243,46 @@ const initialBlocks: Block[] = [
       },
     },
   },
-  {
-    id: 1,
-    name: "Create Summary (OpenRouter)",
-    blockType: "ai-text",
-    description:
-      "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
-    args: {
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include anything that won't be read aloud. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
-        },
-        {
-          role: "user",
-          content:
-            "Create a script for me from the following: {previousBlockResult}",
-        }, // how should I pipe in the text from the previous block?
-      ],
-      model: "mistralai/mixtral-8x7b-instruct",
-      OPENROUTER_API_KEY: "",
-    },
-    blockAction: { createSummary: { fn: createSummary } },
-    // blockAction: null,
-    result: null,
-  },
-  {
-    id: 2,
-    name: "Create Audio (ElevenLabs)",
-    blockType: "ai-audio",
-    description:
-      "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
-    args: {
-      text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
-      voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
-      ELEVENLABS_API_KEY: "",
-    },
-    blockAction: null,
-    result: null,
-  },
+  // {
+  //   id: 1,
+  //   name: "Create Summary (OpenRouter)",
+  //   blockType: "ai-text",
+  //   description:
+  //     "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
+  //   args: {
+  //     messages: [
+  //       {
+  //         role: "system",
+  //         content:
+  //           "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include anything that won't be read aloud. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
+  //       },
+  //       {
+  //         role: "user",
+  //         content:
+  //           "Create a script for me from the following: {previousBlockResult}",
+  //       }, // how should I pipe in the text from the previous block?
+  //     ],
+  //     model: "mistralai/mixtral-8x7b-instruct",
+  //     OPENROUTER_API_KEY: "",
+  //   },
+  //   blockAction: { createSummary: { fn: createSummary } },
+  //   // blockAction: null,
+  //   result: null,
+  // },
+  // {
+  //   id: 2,
+  //   name: "Create Audio (ElevenLabs)",
+  //   blockType: "ai-audio",
+  //   description:
+  //     "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
+  //   args: {
+  //     text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
+  //     voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
+  //     ELEVENLABS_API_KEY: "",
+  //   },
+  //   blockAction: null,
+  //   result: null,
+  // },
   // {
   //   id: 1,
   //   name: "Create Summary (OpenRouter)",
