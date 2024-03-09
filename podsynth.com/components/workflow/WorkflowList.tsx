@@ -3,7 +3,16 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Copy, CopyCheck, LoaderIcon, Minus, Plus, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Copy,
+  CopyCheck,
+  LoaderIcon,
+  Minus,
+  Plus,
+  X,
+} from "lucide-react";
 import { rssUtilityBlockFunction } from "@/lib/block-functions";
 import {
   Select,
@@ -139,6 +148,8 @@ function RssBlockItem({ block }: { block: Block }) {
   const { running } = useWorkflow();
   const [copied, setCopied] = useState(false);
 
+  const [expandResult, setExpandResult] = useState(false);
+
   return (
     <div className="flex flex-col w-full gap-2">
       <div className="flex flex-row justify-between items-start pb-4">
@@ -257,15 +268,33 @@ function RssBlockItem({ block }: { block: Block }) {
               Finished in {block.result.executionTime}ms.
             </div>
           )}
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-gray-600">
-              <code className="">{block.result.output}</code>
-            </div>
-            {block.result.output && (
+
+          {block.result.output && (
+            <div className="flex flex-row gap-1 items-start">
+              <div
+                className={`text-xs text-gray-600 ${
+                  !expandResult ? "line-clamp-3" : ""
+                }`}
+              >
+                <code>{block.result.output}</code>
+              </div>
+              <div className="flex flex-row gap-1 items-center h-[46px]">
               <Button
                 variant="ghost"
                 size="icon"
-                className="shrink-0"
+                className="shrink-0 px-1 py-1.5 w-auto"
+                onClick={() => setExpandResult(!expandResult)}
+              >
+                {expandResult ? (
+                  <ChevronUp className="w-4 h-4 text-gray-600" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-gray-600" />
+                )}
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0 px-1 py-1.5 w-auto"
                 onClick={() => {
                   navigator.clipboard.writeText(
                     block.result ? block.result.output || "" : ""
@@ -279,8 +308,9 @@ function RssBlockItem({ block }: { block: Block }) {
                   <Copy className="w-4 h-4 text-gray-600" />
                 )}
               </Button>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {block.result && block.result.error && (
