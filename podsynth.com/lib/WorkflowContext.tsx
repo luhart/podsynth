@@ -62,11 +62,12 @@ interface WorkflowProviderProps {
 export function WorkflowProvider({ children }: WorkflowProviderProps) {
   const [blocks, dispatch] = useReducer(workflowReducer, initialBlocks);
   const [running, setRunning] = useState(false);
-  
+
   const [services] = useAtom(servicesAtom);
 
   async function runWorkflow() {
     setRunning(true);
+    const resultsCopy: string[] = []
     for (let block of blocks) {
       if (block.blockAction) {
         let result;
@@ -76,23 +77,43 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
             block.args.source.value,
             block.args.numItems.value
           );
+          resultsCopy.push(result.output || "")
         } else if ("createSummary" in block.blockAction) {
+          // use result from previous block wherever {previousBlockResult} is found
+
+          const messages = block.args.messages.map((m: any) => {
+            if (m.content.includes("{previousBlockResult}")) {
+              if (block.id === undefined)
+                throw new Error("Block ID is undefined");
+              return {
+                role: m.role,
+                content: m.content.replace(
+                  "{previousBlockResult}",
+                  resultsCopy[block.id - 1]
+                ),
+              };
+            }
+            return m;
+          });
           result = await block.blockAction.createSummary.fn(
-            block.args.messages, 
+            messages,
             block.args.model,
             services.find((s) => s.name === "OpenRouter")?.key
           );
+          resultsCopy.push(result.output || "")
         } else {
           throw new Error("Unknown block action");
         }
         if (block.id === undefined) throw new Error("Block ID is undefined");
-        dispatch({
-          type: "UPDATE_BLOCK_RESULT",
-          id: block.id,
-          result: result,
-        });
-        if (result.error) {
-          break;
+        if (result) {
+          dispatch({
+            type: "UPDATE_BLOCK_RESULT",
+            id: block.id,
+            result: result,
+          });
+          if (result.error) {
+            break;
+          }
         }
       }
     }
@@ -220,7 +241,8 @@ const initialBlocks: Block[] = [
     name: "Create Summary (OpenRouter)",
     blockType: "ai-text",
     status: "complete",
-    description: "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
+    description:
+      "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
     args: {
       messages: [
         {
@@ -230,14 +252,15 @@ const initialBlocks: Block[] = [
         },
         {
           role: "user",
-          content: "Create a script for me from the following: {previousBlockResult}",
+          content:
+            "Create a script for me from the following: {previousBlockResult}",
         }, // how should I pipe in the text from the previous block?
       ],
       model: "mistralai/mixtral-8x7b-instruct",
       OPENROUTER_API_KEY: "",
     },
-    // blockAction: { createSummary: { fn: createSummary } },
-    blockAction: null,
+    blockAction: { createSummary: { fn: createSummary } },
+    // blockAction: null,
     result: null,
   },
   {
@@ -245,7 +268,8 @@ const initialBlocks: Block[] = [
     name: "Create Audio (ElevenLabs)",
     blockType: "ai-audio",
     status: "complete",
-    description: "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
+    description:
+      "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
     args: {
       text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
       voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
