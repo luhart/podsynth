@@ -254,7 +254,7 @@ const initialBlocks: Block[] = [
         {
           role: "system",
           content:
-            "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include emojis or special characters. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
+            "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include anything that won't be read aloud. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
         },
         {
           role: "user",

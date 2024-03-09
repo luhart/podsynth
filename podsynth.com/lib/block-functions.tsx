@@ -111,7 +111,7 @@ export async function createSummary(
     baseURL: "https://openrouter.ai/api/v1",
     apiKey: OPENROUTER_API_KEY,
     defaultHeaders: {},
-    dangerouslyAllowBrowser: false,
+    dangerouslyAllowBrowser: true,
   });
 
   const start = performance.now();
