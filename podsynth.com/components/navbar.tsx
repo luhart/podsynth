@@ -8,11 +8,21 @@ export default async function Navbar() {
         Skip to content
       </a>
       <div className="flex justify-between items-center py-4 max-w-xl w-full sm:px-4">
-        <Link href="/" className="text-sm font-medium tracking-tight">
-          podsynth
-        </Link>
+        <div className="flex flex-row gap-2 items-center">
+          <Link href="/" className="text-sm font-medium tracking-tight">
+            podsynth
+          </Link>
+          <div className="px-2 text-xs text-gray-500 border rounded-full py-0.5 bg-gradient-to-br from-gray-100 to-white">
+            preview
+          </div>
+        </div>
+
         <Button variant="ghost" size="icon" asChild>
-          <a href="https://github.com/luhart/podsynth" target="_blank" rel="noopener noreferrer">
+          <a
+            href="https://github.com/luhart/podsynth"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Github />
           </a>
         </Button>
