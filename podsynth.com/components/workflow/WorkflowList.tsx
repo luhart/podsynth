@@ -501,7 +501,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
         <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
           {block.result.status === "running" ? (
             <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
-              Running <LoaderIcon className="animate-spin w-4 h-4" />
+              Running <LoaderIcon className="animate-spin w-4 h-4" /> {block.result.executionTime}ms
             </div>
           ) : (
             <div className="text-sm text-gray-600 font-medium">
