@@ -3,15 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import {
-  Copy,
-  CopyCheck,
-  LoaderIcon,
-  Minus,
-  Play,
-  Plus,
-  X,
-} from "lucide-react";
+import { Copy, CopyCheck, LoaderIcon, Minus, Plus, X } from "lucide-react";
 import { rssUtilityBlockFunction } from "@/lib/block-functions";
 import {
   Select,

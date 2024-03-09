@@ -78,20 +78,8 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
           );
         } else if ("createSummary" in block.blockAction) {
           result = await block.blockAction.createSummary.fn(
-            [
-              {
-                role: "system",
-                content:
-                  "You are a writer for the news. You create readable scripts for a news program. These scripts will be read aloud by one person. Do not include emojis or special characters. Skip items that aren't newsworthy. Add a sign-off at the end of the script.",
-              },
-              {
-                role: "user",
-                content:
-                  "Create a script for me from the following: " +
-                  block.args.text.value,
-              },
-            ],
-            "mistralai/mixtral-8x7b-instruct",
+            block.args.messages, 
+            block.args.model,
             services.find((s) => s.name === "OpenRouter")?.key
           );
         } else {
