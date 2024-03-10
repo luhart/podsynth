@@ -177,12 +177,12 @@ function HomeClientAnon() {
         )}
       </div>
 
-      <div className="flex flex-col gap-3 w-full">
-        <WorkflowProvider>
+      <WorkflowProvider>
+        <div className="flex flex-col gap-8 w-full">
           <WorkFlowHeader />
           <WorkflowList />
-        </WorkflowProvider>
-      </div>
+        </div>
+      </WorkflowProvider>
     </div>
   );
 }
@@ -206,7 +206,6 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
     </div>
   );
 };
-
 
 export const HomeClientAnonWrapped = () => {
   return (

@@ -85,20 +85,27 @@ export default function WorkflowList() {
 
   return (
     <ul className="flex flex-col gap-3">
-      {blocks.map((block: any) => (
-        <li key={block.id}>
-          <BlockContainer>
-            {block.blockType === "utility" ? (
-              <RssBlockItem block={block} />
-            ) : block.blockType === "ai-text" ? (
-              <LLMBlockItem block={block} />
-            ) : block.blockType === "ai-audio" ? (
-              <CreateAudioBlockItem block={block} />
-            ) : (
-              <div>Unknown block type</div>
-            )}
-          </BlockContainer>
-        </li>
+      {blocks.map((block: any, index: number) => (
+        <>
+          <li key={block.id}>
+            <BlockContainer>
+              {block.blockType === "utility" ? (
+                <RssBlockItem block={block} />
+              ) : block.blockType === "ai-text" ? (
+                <LLMBlockItem block={block} />
+              ) : block.blockType === "ai-audio" ? (
+                <CreateAudioBlockItem block={block} />
+              ) : (
+                <div>Unknown block type</div>
+              )}
+            </BlockContainer>
+          </li>
+          {index < blocks.length - 1 && (
+            <li className="flex justify-center">
+              <div className=" text-gray-600">↓</div>
+            </li>
+          )}
+        </>
       ))}
       <>
         {blocks.length === 0 ? (
@@ -110,7 +117,7 @@ export default function WorkflowList() {
           </>
         ) : (
           <>
-            <div className="w-full flex flex-row gap-3">
+            <div className="w-full flex flex-row gap-3 mt-4">
               <NewBlockButton />
               <Button
                 onClick={async () => {

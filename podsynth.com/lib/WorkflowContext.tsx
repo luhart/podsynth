@@ -236,7 +236,7 @@ export const newDummyBlock = {
 const initialBlocks: Block[] = [
   {
     id: 0,
-    name: "Parse RSS feed",
+    name: "Use RSS Feed",
     blockType: "utility",
     description: "Grabs the most recent {numItems} from an RSS feed {source}.",
     blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
@@ -280,28 +280,20 @@ const initialBlocks: Block[] = [
     // blockAction: null,
     result: null,
   },
-  // {
-  //   id: 2,
-  //   name: "Create Audio (ElevenLabs)",
-  //   blockType: "ai-audio",
-  //   description:
-  //     "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
-  //   args: {
-  //     text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
-  //     voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
-  //     ELEVENLABS_API_KEY: "",
-  //   },
-  //   blockAction: null,
-  //   result: null,
-  // },
-  // {
-  //   id: 1,
-  //   name: "Create Summary (OpenRouter)",
-  //   blockType: "service",
-  //   status: "complete",
-  //   description: "Summarizes {text} based on {instructions} using model",
-  //   args: ,
-  // }
+  {
+    id: 2,
+    name: "Create Audio (ElevenLabs)",
+    blockType: "ai-audio",
+    description:
+      "Generates an audio file from {text} using {model}. Use {previousBlockResult} to insert the output of the previous block.",
+    args: {
+      text: "Good morning, here are the top stories from Techmeme. {previousBlockResult}",
+      voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
+      ELEVENLABS_API_KEY: "",
+    },
+    blockAction: null,
+    result: null,
+  },
 ];
 
 const initialWorkflowMetadata = {
