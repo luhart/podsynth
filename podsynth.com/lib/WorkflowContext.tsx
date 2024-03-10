@@ -256,10 +256,10 @@ const initialBlocks: Block[] = [
   },
   {
     id: 1,
-    name: "Create Summary (OpenRouter)",
+    name: "Invoke LLM (OpenRouter)",
     blockType: "ai-text",
     description:
-      "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
+      "Call language model {model} with {messages}. Use template `{previousBlockResult}` to insert the output of the previous block.",
     args: {
       messages: [
         {

@@ -152,23 +152,7 @@ function RssBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">
-            {block.name || "Parse RSS feed"}
-          </div>
-          <div className="text-gray-600 text-sm">
-            {block.description ||
-              `Grabs the most recent {numItems} from an RSS feed
-              {source}.`}
-          </div>
-        </div>
-
-        <Button size="sm" variant="outline" disabled={running}>
-          Edit
-        </Button>
-      </div>
-
+      <BlockHeader block={block} disabled={running} />
       <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
@@ -279,35 +263,35 @@ function RssBlockItem({ block }: { block: Block }) {
                 <code>{block.result.output}</code>
               </div>
               <div className="flex flex-row gap-1 items-center h-[46px]">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 px-1 py-1.5 w-auto"
-                onClick={() => setExpandResult(!expandResult)}
-              >
-                {expandResult ? (
-                  <ChevronUp className="w-4 h-4 text-gray-600" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-600" />
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="shrink-0 px-1 py-1.5 w-auto"
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    block.result ? block.result.output || "" : ""
-                  );
-                  setCopied(true);
-                }}
-              >
-                {copied ? (
-                  <CopyCheck className="w-4 h-4 text-gray-600" />
-                ) : (
-                  <Copy className="w-4 h-4 text-gray-600" />
-                )}
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 px-1 py-1.5 w-auto"
+                  onClick={() => setExpandResult(!expandResult)}
+                >
+                  {expandResult ? (
+                    <ChevronUp className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 px-1 py-1.5 w-auto"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      block.result ? block.result.output || "" : ""
+                    );
+                    setCopied(true);
+                  }}
+                >
+                  {copied ? (
+                    <CopyCheck className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-gray-600" />
+                  )}
+                </Button>
               </div>
             </div>
           )}
@@ -333,21 +317,11 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">{block.name}</div>
-          <div className="text-gray-600 text-sm">{block.description}</div>
-        </div>
-
-        <Button size="sm" variant="outline" disabled={running}>
-          Edit
-        </Button>
-      </div>
-
+      <BlockHeader block={block} disabled={running} />
       <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
-            instructions
+            messages
           </label>
           {block.args.messages.map((message: any, index: number) => (
             <div
@@ -501,7 +475,8 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
         <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
           {block.result.status === "running" ? (
             <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
-              Running <LoaderIcon className="animate-spin w-4 h-4" /> {block.result.executionTime}ms
+              Running <LoaderIcon className="animate-spin w-4 h-4" />{" "}
+              {block.result.executionTime}ms
             </div>
           ) : (
             <div className="text-sm text-gray-600 font-medium">
@@ -554,17 +529,7 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">{block.name}</div>
-          <div className="text-gray-600 text-sm">{block.description}</div>
-        </div>
-
-        <Button size="sm" variant="outline">
-          Edit
-        </Button>
-      </div>
-
+      <BlockHeader block={block} disabled={running} />
       <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
@@ -690,6 +655,28 @@ function BlockContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-white  rounded-md border">
       {children}
+    </div>
+  );
+}
+
+function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
+  return (
+    <div className="flex flex-row justify-between items-start pb-4">
+      <div className="flex flex-col gap-1">
+        <div className="flex flex-row gap-1 items-center">
+          <div className="font-medium font-mono text-gray-600">
+            {block.id}
+          </div>
+          <div className="w-3 h-[1px] bg-gray-200" />
+          <div className="font-medium tracking-tight">{block.name}</div>
+        </div>
+
+        <div className="text-gray-600 text-sm">{block.description}</div>
+      </div>
+
+      <Button size="sm" variant="outline" disabled={disabled}>
+        Edit
+      </Button>
     </div>
   );
 }
