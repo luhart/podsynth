@@ -9,6 +9,8 @@ export const textModels = [
   {'id': 'anthropic/claude-3-opus:beta', 'name': 'Anthropic: Claude 3 Opus'},
   {'id': 'nousresearch/nous-hermes-2-mixtral-8x7b-dpo', 'name': 'Nous: Hermes 2 Mixtral 8x7B DPO'},
   {'id': 'openai/gpt-3.5-turbo-0125', 'name': 'OpenAI: GPT-3.5 Turbo 16k'},
-  {'id': 'openai/gpt-4-turbo-preview', 'name': 'OpenAI: GPT-5'},
+  {'id': 'openai/gpt-4-turbo-preview', 'name': 'OpenAI: GPT-4 Turbo'},
+  {'id': 'openai/gpt-4', 'name': 'OpenAI: GPT-4'},
+  {'id': 'openai/gpt-4-32k', 'name': 'OpenAI: GPT-4 32k'},
   {'id': 'nousresearch/nous-hermes-llama2-13b', 'name': 'Nous: Hermes 13B'}
 ];

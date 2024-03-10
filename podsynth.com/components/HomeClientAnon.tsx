@@ -103,7 +103,7 @@ function HomeClientAnon() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="font-semibold tracking-tight text-lg">Services</div>
+        <div className="font-semibold tracking-tight">Services</div>
         {/* service toggles */}
         {/* <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
           {services.map((service) => (
@@ -177,12 +177,12 @@ function HomeClientAnon() {
         )}
       </div>
 
-      <div className="flex flex-col gap-3 w-full">
-        <WorkflowProvider>
+      <WorkflowProvider>
+        <div className="flex flex-col gap-8 w-full">
           <WorkFlowHeader />
           <WorkflowList />
-        </WorkflowProvider>
-      </div>
+        </div>
+      </WorkflowProvider>
     </div>
   );
 }
@@ -206,7 +206,6 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
     </div>
   );
 };
-
 
 export const HomeClientAnonWrapped = () => {
   return (

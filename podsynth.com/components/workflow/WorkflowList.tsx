@@ -3,7 +3,16 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Copy, CopyCheck, LoaderIcon, Minus, Plus, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Copy,
+  CopyCheck,
+  LoaderIcon,
+  Minus,
+  Plus,
+  X,
+} from "lucide-react";
 import { rssUtilityBlockFunction } from "@/lib/block-functions";
 import {
   Select,
@@ -76,20 +85,27 @@ export default function WorkflowList() {
 
   return (
     <ul className="flex flex-col gap-3">
-      {blocks.map((block: any) => (
-        <li key={block.id}>
-          <BlockContainer>
-            {block.blockType === "utility" ? (
-              <RssBlockItem block={block} />
-            ) : block.blockType === "ai-text" ? (
-              <CreateSummaryBlockItem block={block} />
-            ) : block.blockType === "ai-audio" ? (
-              <CreateAudioBlockItem block={block} />
-            ) : (
-              <div>Unknown block type</div>
-            )}
-          </BlockContainer>
-        </li>
+      {blocks.map((block: any, index: number) => (
+        <>
+          <li key={block.id}>
+            <BlockContainer>
+              {block.blockType === "utility" ? (
+                <RssBlockItem block={block} />
+              ) : block.blockType === "ai-text" ? (
+                <LLMBlockItem block={block} />
+              ) : block.blockType === "ai-audio" ? (
+                <CreateAudioBlockItem block={block} />
+              ) : (
+                <div>Unknown block type</div>
+              )}
+            </BlockContainer>
+          </li>
+          {index < blocks.length - 1 && (
+            <li className="flex justify-center">
+              <div className=" text-gray-600">↓</div>
+            </li>
+          )}
+        </>
       ))}
       <>
         {blocks.length === 0 ? (
@@ -101,7 +117,7 @@ export default function WorkflowList() {
           </>
         ) : (
           <>
-            <div className="w-full flex flex-row gap-3">
+            <div className="w-full flex flex-row gap-3 mt-4">
               <NewBlockButton />
               <Button
                 onClick={async () => {
@@ -139,26 +155,12 @@ function RssBlockItem({ block }: { block: Block }) {
   const { running } = useWorkflow();
   const [copied, setCopied] = useState(false);
 
+  const [expandResult, setExpandResult] = useState(false);
+
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">
-            {block.name || "Parse RSS feed"}
-          </div>
-          <div className="text-gray-600 text-sm">
-            {block.description ||
-              `Grabs the most recent {numItems} from an RSS feed
-              {source}.`}
-          </div>
-        </div>
-
-        <Button size="sm" variant="outline" disabled={running}>
-          Edit
-        </Button>
-      </div>
-
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockHeader block={block} disabled={running} />
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
             source
@@ -245,34 +247,61 @@ function RssBlockItem({ block }: { block: Block }) {
             </Button>
           </div>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
-        <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
-          <div className="text-sm text-gray-600 font-medium">
-            Finished in {block.result.executionTime}ms.
-          </div>
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-              <code className="line-clamp-3">{block.result.output}</code>
+        <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
+          {block.result.status === "running" ? (
+            <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
+              Running <LoaderIcon className="animate-spin w-4 h-4" />
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  block.result ? block.result.output || "" : ""
-                );
-                setCopied(true);
-              }}
-            >
-              {copied ? (
-                <CopyCheck className="w-4 h-4 text-gray-600" />
-              ) : (
-                <Copy className="w-4 h-4 text-gray-600" />
-              )}
-            </Button>
-          </div>
+          ) : (
+            <div className="text-sm text-gray-600 font-medium">
+              Finished in {block.result.executionTime}ms.
+            </div>
+          )}
+
+          {block.result.output && (
+            <div className="flex flex-row gap-1 items-start">
+              <div
+                className={`text-xs text-gray-600 ${
+                  !expandResult ? "line-clamp-3" : ""
+                }`}
+              >
+                <code>{block.result.output}</code>
+              </div>
+              <div className="flex flex-row gap-1 items-center h-[46px]">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 px-1 py-1.5 w-auto"
+                  onClick={() => setExpandResult(!expandResult)}
+                >
+                  {expandResult ? (
+                    <ChevronUp className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 px-1 py-1.5 w-auto"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      block.result ? block.result.output || "" : ""
+                    );
+                    setCopied(true);
+                  }}
+                >
+                  {copied ? (
+                    <CopyCheck className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <Copy className="w-4 h-4 text-gray-600" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {block.result && block.result.error && (
@@ -288,28 +317,18 @@ function RssBlockItem({ block }: { block: Block }) {
   );
 }
 
-function CreateSummaryBlockItem({ block }: { block: Block }) {
+function LLMBlockItem({ block }: { block: Block }) {
   const dispatch = useWorkflowDispatch();
   const { running } = useWorkflow();
   const [copied, setCopied] = useState(false);
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">{block.name}</div>
-          <div className="text-gray-600 text-sm">{block.description}</div>
-        </div>
-
-        <Button size="sm" variant="outline" disabled={running}>
-          Edit
-        </Button>
-      </div>
-
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockHeader block={block} disabled={running} />
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
-            instructions
+            messages
           </label>
           {block.args.messages.map((message: any, index: number) => (
             <div
@@ -458,12 +477,13 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
           {block.result.status === "running" ? (
             <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
-              Running <LoaderIcon className="animate-spin w-4 h-4" />
+              Running <LoaderIcon className="animate-spin w-4 h-4" />{" "}
+              {block.result.executionTime}ms
             </div>
           ) : (
             <div className="text-sm text-gray-600 font-medium">
@@ -516,18 +536,8 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <div className="flex flex-row justify-between items-start pb-4">
-        <div className="flex flex-col gap-1">
-          <div className="font-medium tracking-tight">{block.name}</div>
-          <div className="text-gray-600 text-sm">{block.description}</div>
-        </div>
-
-        <Button size="sm" variant="outline">
-          Edit
-        </Button>
-      </div>
-
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockHeader block={block} disabled={running} />
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
             text
@@ -605,7 +615,7 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
           <div className="text-sm text-gray-600 font-medium">
@@ -651,6 +661,34 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
 function BlockContainer({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-white  rounded-md border">
+      {children}
+    </div>
+  );
+}
+
+function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
+  return (
+    <div className="flex flex-row justify-between items-start pb-4">
+      <div className="flex flex-col gap-1">
+        <div className="flex flex-row gap-1 items-center">
+          <div className="font-medium font-mono text-gray-600">{block.id}</div>
+          <div className="w-3 h-[1px] bg-gray-200" />
+          <div className="font-medium tracking-tight">{block.name}</div>
+        </div>
+
+        <div className="text-gray-600 text-sm">{block.description}</div>
+      </div>
+
+      <Button size="sm" variant="outline" disabled={disabled}>
+        Edit
+      </Button>
+    </div>
+  );
+}
+
+function BlockInputWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
       {children}
     </div>
   );

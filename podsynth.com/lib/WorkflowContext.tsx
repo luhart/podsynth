@@ -64,9 +64,17 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
 
   const [services] = useAtom(servicesAtom);
 
+  const updateBlockResult = (id: number, result: ResultType) => {
+    dispatch({
+      type: "UPDATE_BLOCK_RESULT",
+      id: id,
+      result: result,
+    });
+  };
+
   async function runWorkflow() {
     setRunning(true);
-    const resultsCopy: string[] = []
+    const resultsCopy: string[] = [];
     for (let block of blocks) {
       if (block.blockAction) {
         let result;
@@ -87,7 +95,7 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
             block.args.source.value,
             block.args.numItems.value
           );
-          resultsCopy.push(result.output || "")
+          resultsCopy.push(result.output || "");
         } else if ("createSummary" in block.blockAction) {
           // use result from previous block wherever {previousBlockResult} is found
           const messages = block.args.messages.map((m: any) => {
@@ -104,12 +112,15 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
             }
             return m;
           });
+
           result = await block.blockAction.createSummary.fn(
             messages,
             block.args.model,
-            services.find((s) => s.name === "OpenRouter")?.key
+            services.find((s) => s.name === "OpenRouter")?.key,
+            block.id,
+            updateBlockResult
           );
-          resultsCopy.push(result.output || "")
+          resultsCopy.push(result.output || "");
         } else {
           throw new Error("Unknown block action");
         }
@@ -225,7 +236,7 @@ export const newDummyBlock = {
 const initialBlocks: Block[] = [
   {
     id: 0,
-    name: "Parse RSS feed",
+    name: "Use RSS Feed",
     blockType: "utility",
     description: "Grabs the most recent {numItems} from an RSS feed {source}.",
     blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
@@ -245,10 +256,10 @@ const initialBlocks: Block[] = [
   },
   {
     id: 1,
-    name: "Create Summary (OpenRouter)",
+    name: "Invoke LLM (OpenRouter)",
     blockType: "ai-text",
     description:
-      "Summarizes text based on {instructions} using {model}. Use {previousBlockResult} to use the output of the previous block.",
+      "Call language model {model} with {messages}. Use template `{previousBlockResult}` to insert the output of the previous block.",
     args: {
       messages: [
         {
@@ -283,14 +294,6 @@ const initialBlocks: Block[] = [
     blockAction: null,
     result: null,
   },
-  // {
-  //   id: 1,
-  //   name: "Create Summary (OpenRouter)",
-  //   blockType: "service",
-  //   status: "complete",
-  //   description: "Summarizes {text} based on {instructions} using model",
-  //   args: ,
-  // }
 ];
 
 const initialWorkflowMetadata = {

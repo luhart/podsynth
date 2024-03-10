@@ -55,7 +55,7 @@ export default function WaitlistForm() {
               </label>
               <label htmlFor="question" className="flex flex-col gap-1 mb-2">
                 <span className="text-gray-600 text-sm font-medium block">
-                  What would you pay me to build?
+                  What would you like to see in the beta?
                 </span>
                 <Input
                   id="question"
