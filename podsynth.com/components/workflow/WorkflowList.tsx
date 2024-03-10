@@ -91,7 +91,7 @@ export default function WorkflowList() {
             {block.blockType === "utility" ? (
               <RssBlockItem block={block} />
             ) : block.blockType === "ai-text" ? (
-              <CreateSummaryBlockItem block={block} />
+              <LLMBlockItem block={block} />
             ) : block.blockType === "ai-audio" ? (
               <CreateAudioBlockItem block={block} />
             ) : (
@@ -153,7 +153,7 @@ function RssBlockItem({ block }: { block: Block }) {
   return (
     <div className="flex flex-col w-full gap-2">
       <BlockHeader block={block} disabled={running} />
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
             source
@@ -240,7 +240,7 @@ function RssBlockItem({ block }: { block: Block }) {
             </Button>
           </div>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
           {block.result.status === "running" ? (
@@ -310,7 +310,7 @@ function RssBlockItem({ block }: { block: Block }) {
   );
 }
 
-function CreateSummaryBlockItem({ block }: { block: Block }) {
+function LLMBlockItem({ block }: { block: Block }) {
   const dispatch = useWorkflowDispatch();
   const { running } = useWorkflow();
   const [copied, setCopied] = useState(false);
@@ -318,7 +318,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
   return (
     <div className="flex flex-col w-full gap-2">
       <BlockHeader block={block} disabled={running} />
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
             messages
@@ -470,7 +470,7 @@ function CreateSummaryBlockItem({ block }: { block: Block }) {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
           {block.result.status === "running" ? (
@@ -530,7 +530,7 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
   return (
     <div className="flex flex-col w-full gap-2">
       <BlockHeader block={block} disabled={running} />
-      <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
             text
@@ -608,7 +608,7 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
             </SelectContent>
           </Select>
         </div>
-      </div>
+      </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
           <div className="text-sm text-gray-600 font-medium">
@@ -664,9 +664,7 @@ function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
     <div className="flex flex-row justify-between items-start pb-4">
       <div className="flex flex-col gap-1">
         <div className="flex flex-row gap-1 items-center">
-          <div className="font-medium font-mono text-gray-600">
-            {block.id}
-          </div>
+          <div className="font-medium font-mono text-gray-600">{block.id}</div>
           <div className="w-3 h-[1px] bg-gray-200" />
           <div className="font-medium tracking-tight">{block.name}</div>
         </div>
@@ -677,6 +675,14 @@ function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
       <Button size="sm" variant="outline" disabled={disabled}>
         Edit
       </Button>
+    </div>
+  );
+}
+
+function BlockInputWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+      {children}
     </div>
   );
 }
