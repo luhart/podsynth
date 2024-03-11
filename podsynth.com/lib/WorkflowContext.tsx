@@ -200,8 +200,12 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
           updateBlockResult
         );
       } else if ("createAudio" in block.blockAction) {
+        const textWithPreviousBlockResult = block.args.text.replace(
+          "{previousBlockResult}",
+          blocks[block.id - 1]
+        );
         result = await block.blockAction.createAudio.fn(
-          block.args.text,
+          textWithPreviousBlockResult,
           block.args.voiceId,
           services.find((s) => s.name === "ElevenLabs")?.key,
           block.id,

@@ -630,7 +630,7 @@ function AudioBlockItem({ block }: { block: Block }) {
             </div>
           )}
           {block.result.output && (
-            <div className="p-3 bg-white text-gray-800 rounded-full">
+            <div className="p-2 bg-gray-200 bg-cross text-gray-800 rounded-full">
               <audio controls className="w-full ">
                 <source src={block.result.output} type="audio/mpeg" />
                 Your browser does not support the audio element.
@@ -722,7 +722,7 @@ function BlockHeader({ block }: { block: Block }) {
 
 function BlockInputWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100">
+    <div className="flex flex-col gap-3 py-5 rounded-lg bg-gray-100 border">
       {children}
     </div>
   );
