@@ -17,7 +17,7 @@ import { servicesAtom } from "../components/HomeClientAnon";
 export type Block = {
   id: number;
   name: string;
-  blockType: "utility" | "ai-text" | "ai-audio";
+  blockType: "rss" | "ai-text" | "ai-audio";
   description: string | null;
   blockAction: BlockAction;
   result: ResultType | null;
@@ -299,32 +299,11 @@ function workflowReducer(blocks: Block[], action: Action): Block[] {
   }
 }
 
-export const newDummyBlock = {
-  name: "Parse RSS feed",
-  blockType: "utility",
-  status: "complete",
-  description: "Grabs the most recent {numItems} from an RSS feed {source}.",
-  blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
-  result: null,
-  args: {
-    source: {
-      type: "text",
-      value: "https://www.techmeme.com/feed.xml",
-    },
-    numItems: {
-      type: "number",
-      value: 5,
-      min: 1,
-      max: 10,
-    },
-  },
-};
-
 const initialBlocks: Block[] = [
   {
     id: 0,
     name: "Use RSS Feed",
-    blockType: "utility",
+    blockType: "rss",
     description: "Grabs the most recent {numItems} from an RSS feed {source}.",
     blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
     result: null,

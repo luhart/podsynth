@@ -27,6 +27,7 @@ import {
 } from "../ui/select";
 import { voiceProfiles } from "@/lib/voices";
 import { textModels } from "@/lib/models";
+import { NewBlockCombobox } from "./NewBlock";
 
 export default function WorkflowList() {
   const { blocks, running, runWorkflow } = useWorkflow();
@@ -59,7 +60,7 @@ export default function WorkflowList() {
             block: {
               id: blocks.length,
               name: "Parse RSS feed",
-              blockType: "utility",
+              blockType: "rss",
               description:
                 "Grabs the most recent &#123;numItems&#125; from an RSS feed &#123;source&#125;.",
               blockAction: { rssParse: { fn: rssUtilityBlockFunction } },
@@ -91,7 +92,7 @@ export default function WorkflowList() {
         <>
           <li key={block.id}>
             <BlockContainer block={block}>
-              {block.blockType === "utility" ? (
+              {block.blockType === "rss" ? (
                 <RssBlockItem block={block} />
               ) : block.blockType === "ai-text" ? (
                 <LLMBlockItem block={block} />
@@ -115,12 +116,12 @@ export default function WorkflowList() {
             <div className="text-gray-600 text-center w-full px-4 py-24 rounded-xl border bg-white">
               No blocks. Add a block to get started.
             </div>
-            <NewBlockButton />
+            <NewBlockCombobox />
           </>
         ) : (
           <>
             <div className="w-full flex flex-row gap-3 mt-4">
-              <NewBlockButton />
+              <NewBlockCombobox />
               <Button
                 onClick={async () => {
                   await runWorkflow();
