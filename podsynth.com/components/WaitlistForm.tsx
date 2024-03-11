@@ -5,12 +5,31 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
 
 export default function WaitlistForm() {
+  const supabase = createClient();
+
   const [email, setEmail] = useState<string>("");
-  const [question, setQuestion] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await supabase
+      .from('waitlist')
+      .insert([
+        { email, message },
+      ])
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting waitlist form", error);
+    }
+    setLoading(false);
+  }
 
   return (
     <div className="w-full">
@@ -25,14 +44,17 @@ export default function WaitlistForm() {
           />
           <div
             className={`hidden 2xs:block sm:px-8 px-4 border border-r-0 rounded-l-full h-2 ${
-              question !== ""
+              message !== ""
                 ? "bg-gradient-to-r from-green-200 to-green-100 border-green-200"
                 : "bg-gradient-to-r from-gray-200 to-gray-100"
             }`}
           />
         </div>
 
-        <form className="flex flex-col w-full gap-4 bg-gray-50 px-4 py-6 rounded-lg border">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col w-full gap-4 bg-gray-50 px-4 py-6 rounded-lg border"
+        >
           {!submitted ? (
             <>
               <div className="font-medium tracking-tight">
@@ -55,19 +77,23 @@ export default function WaitlistForm() {
               </label>
               <label htmlFor="question" className="flex flex-col gap-1 mb-2">
                 <span className="text-gray-600 text-sm font-medium block">
-                  What would you like to see in the beta?
+                  Any specific requests?
                 </span>
                 <Input
                   id="question"
-                  placeholder="uhh..."
+                  placeholder="I want to be able to..."
                   name="question"
                   type="text"
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   className="bg-white"
                 />
               </label>
-              <Button variant="default" disabled={loading} className="flex flex-row justify-between items-center group px-6">
+              <Button
+                variant="default"
+                disabled={loading}
+                className="flex flex-row justify-between items-center group px-6"
+              >
                 <div className="w-4" />
                 <div className="flex flex-row gap-1 items-center">
                   Submit
@@ -98,7 +124,7 @@ export default function WaitlistForm() {
         </form>
         <div
           className={`hidden 2xs:block sm:px-12 px-6 border border-l-0 rounded-r-full h-2 ${
-            email !== "" && question !== ""
+            email !== "" && message !== ""
               ? "bg-gradient-to-l from-green-200 to-green-100 border-green-200"
               : "bg-gradient-to-l from-gray-200 to-gray-100"
           }`}
