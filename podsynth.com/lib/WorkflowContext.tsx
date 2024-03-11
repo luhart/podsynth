@@ -124,7 +124,20 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
             updateBlockResult
           );
           resultsCopy.push(result.output || "");
-        } else {
+        } else if ("createAudio" in block.blockAction) {
+          const textWithPreviousBlockResult = block.args.text.replace(
+            "{previousBlockResult}",
+            resultsCopy[block.id - 1]
+          );
+          result = await block.blockAction.createAudio.fn(
+            textWithPreviousBlockResult,
+            block.args.voiceId,
+            services.find((s) => s.name === "ElevenLabs")?.key,
+            block.id,
+            updateBlockResult
+          );
+        }
+        else {
           throw new Error("Unknown block action");
         }
         if (result) {

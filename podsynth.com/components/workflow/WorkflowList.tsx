@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import {
+  ArrowRight,
   ChevronDown,
   ChevronUp,
   Copy,
@@ -11,6 +12,7 @@ import {
   LoaderIcon,
   Minus,
   Plus,
+  Trash,
   X,
 } from "lucide-react";
 import { rssUtilityBlockFunction } from "@/lib/block-functions";
@@ -88,13 +90,13 @@ export default function WorkflowList() {
       {blocks.map((block: any, index: number) => (
         <>
           <li key={block.id}>
-            <BlockContainer>
+            <BlockContainer block={block}>
               {block.blockType === "utility" ? (
                 <RssBlockItem block={block} />
               ) : block.blockType === "ai-text" ? (
                 <LLMBlockItem block={block} />
               ) : block.blockType === "ai-audio" ? (
-                <CreateAudioBlockItem block={block} />
+                <AudioBlockItem block={block} />
               ) : (
                 <div>Unknown block type</div>
               )}
@@ -159,7 +161,7 @@ function RssBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <BlockHeader block={block} disabled={running} />
+      <BlockHeader block={block} />
       <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
@@ -249,7 +251,7 @@ function RssBlockItem({ block }: { block: Block }) {
         </div>
       </BlockInputWrapper>
       {block.result && !block.result.error && (
-        <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
+        <div className="flex flex-col bg-gray-100 rounded-lg border px-4 py-5 gap-2">
           {block.result.status === "running" ? (
             <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
               Running <LoaderIcon className="animate-spin w-4 h-4" />
@@ -324,7 +326,7 @@ function LLMBlockItem({ block }: { block: Block }) {
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <BlockHeader block={block} disabled={running} />
+      <BlockHeader block={block} />
       <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
@@ -479,7 +481,7 @@ function LLMBlockItem({ block }: { block: Block }) {
         </div>
       </BlockInputWrapper>
       {block.result && !block.result.error && (
-        <div className="flex flex-col bg-gray-100 rounded-lg border-2 px-4 py-5 gap-2">
+        <div className="flex flex-col bg-gray-100 rounded-lg border px-4 py-5 gap-2">
           {block.result.status === "running" ? (
             <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
               Running <LoaderIcon className="animate-spin w-4 h-4" />{" "}
@@ -529,14 +531,14 @@ function LLMBlockItem({ block }: { block: Block }) {
   );
 }
 
-function CreateAudioBlockItem({ block }: { block: Block }) {
+function AudioBlockItem({ block }: { block: Block }) {
   const dispatch = useWorkflowDispatch();
   const { running } = useWorkflow();
   const [copied, setCopied] = useState(false);
 
   return (
     <div className="flex flex-col w-full gap-2">
-      <BlockHeader block={block} disabled={running} />
+      <BlockHeader block={block} />
       <BlockInputWrapper>
         <div className="flex flex-col gap-1 px-4">
           <label className="text-xs text-gray-600 font-semibold font-mono">
@@ -618,31 +620,23 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
       </BlockInputWrapper>
       {block.result && !block.result.error && (
         <div className="flex flex-col bg-gray-100 rounded-xl px-4 py-5 gap-2">
-          <div className="text-sm text-gray-600 font-medium">
-            Finished in {block.result.executionTime}ms.
-          </div>
-          <div className="flex flex-row gap-1 items-center">
-            <div className="text-xs text-gray-600 overflow-hidden max-h-[4.5rem]">
-              <code className="line-clamp-3">{block.result.output}</code>
+          {block.result.status === "running" ? (
+            <div className="text-sm text-gray-600 font-medium flex flex-row gap-1 items-center">
+              Running <LoaderIcon className="animate-spin w-4 h-4" />{" "}
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  block.result ? block.result.output || "" : ""
-                );
-                setCopied(true);
-              }}
-            >
-              {copied ? (
-                <CopyCheck className="w-4 h-4 text-gray-600" />
-              ) : (
-                <Copy className="w-4 h-4 text-gray-600" />
-              )}
-            </Button>
-          </div>
+          ) : (
+            <div className="text-sm text-gray-600 font-medium">
+              Finished in {block.result.executionTime}ms.
+            </div>
+          )}
+          {block.result.output && (
+            <div className="p-3 bg-white text-gray-800 rounded-full">
+              <audio controls className="w-full ">
+                <source src={block.result.output} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+          )}
         </div>
       )}
       {block.result && block.result.error && (
@@ -658,17 +652,56 @@ function CreateAudioBlockItem({ block }: { block: Block }) {
   );
 }
 
-function BlockContainer({ children }: { children: React.ReactNode }) {
+function BlockContainer({
+  children,
+  block,
+}: {
+  children: React.ReactNode;
+  block: Block;
+}) {
+  const { runBlock } = useWorkflow();
+  const dispatch = useWorkflowDispatch();
+  const [showButtons, setShowButtons] = useState(false);
+
   return (
-    <div className="flex flex-row w-full items-center justify-between px-4 py-6 bg-white  rounded-md border">
+    <div
+      className="relative flex flex-col w-full items-center justify-between px-4 py-6 bg-white rounded-lg border"
+      onMouseEnter={() => setShowButtons(true)}
+      onMouseLeave={() => setShowButtons(false)}
+    >
       {children}
+      <div
+        className={`absolute bottom-0 -right-3 transform -translate-x-1/4 translate-y-1/2 flex gap-2 bg-white rounded-lg border py-1 px-1 transition-all duration-150 ${showButtons ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+      >
+        <Button
+          variant={"ghost"}
+          size="sm"
+          className="py-1 px-2 h-auto font-mono text-xs rounded-lg text-gray-600"
+          onClick={() => {
+            dispatch({
+              type: "REMOVE_BLOCK",
+              id: block.id,
+            });
+          }}
+        >
+          <Trash className="w-3 h-3" />
+        </Button>
+        <Button
+          variant={"ghost"}
+          size="sm"
+          className="py-1 px-2 h-auto text-xs font-medium rounded-lg text-gray-600"
+          onClick={() => {
+            runBlock(block);
+          }}
+        >
+          Run <ArrowRight className="ml-1 w-3 h-3" />
+        </Button>
+      </div>
     </div>
   );
 }
 
-function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
-  const { runBlock } = useWorkflow();
-
+function BlockHeader({ block }: { block: Block }) {
   return (
     <div className="flex flex-row justify-between items-start pb-4">
       <div className="flex flex-col gap-1">
@@ -677,21 +710,12 @@ function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
           <div className="w-3 h-[1px] bg-gray-200" />
           <div className="font-medium tracking-tight">{block.name}</div>
         </div>
-
         <div className="text-gray-600 text-sm">{block.description}</div>
       </div>
 
-      <Button size="sm" variant="outline" disabled={disabled}>
+      {/* <Button size="sm" variant="ghost" disabled={disabled}>
         Edit
-      </Button>
-      <Button
-        size="sm"
-        variant="outline"
-        disabled={disabled}
-        onClick={() => runBlock(block)}
-      >
-        Run
-      </Button>
+      </Button> */}
     </div>
   );
 }
