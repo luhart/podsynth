@@ -667,6 +667,8 @@ function BlockContainer({ children }: { children: React.ReactNode }) {
 }
 
 function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
+  const { runBlock } = useWorkflow();
+
   return (
     <div className="flex flex-row justify-between items-start pb-4">
       <div className="flex flex-col gap-1">
@@ -681,6 +683,14 @@ function BlockHeader({ block, disabled }: { block: Block; disabled: boolean }) {
 
       <Button size="sm" variant="outline" disabled={disabled}>
         Edit
+      </Button>
+      <Button
+        size="sm"
+        variant="outline"
+        disabled={disabled}
+        onClick={() => runBlock(block)}
+      >
+        Run
       </Button>
     </div>
   );

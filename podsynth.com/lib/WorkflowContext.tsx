@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {
   ResultType,
+  createAudio,
   createSummary,
   rssUtilityBlockFunction,
 } from "./block-functions";
@@ -26,6 +27,7 @@ export type Block = {
 type BlockAction =
   | { rssParse: { fn: typeof rssUtilityBlockFunction } }
   | { createSummary: { fn: typeof createSummary } }
+  | { createAudio: { fn: typeof createAudio } }
   | null;
 
 type Action =
@@ -47,6 +49,7 @@ type WorkflowContextType = {
   blocks: Block[];
   running: boolean;
   runWorkflow: () => Promise<void>;
+  runBlock: (block: Block) => Promise<void>;
 };
 
 const WorkflowContext = createContext<WorkflowContextType | null>(null);
@@ -139,8 +142,74 @@ export function WorkflowProvider({ children }: WorkflowProviderProps) {
     setRunning(false);
   }
 
+  async function runBlock(block: Block) {
+    if (block.blockAction) {
+      let result;
+
+      dispatch({
+        type: "UPDATE_BLOCK_RESULT",
+        id: block.id,
+        result: {
+          executionTime: 0,
+          output: null,
+          error: null,
+          status: "running",
+        },
+      });
+
+      if ("rssParse" in block.blockAction) {
+        result = await block.blockAction.rssParse.fn(
+          block.args.source.value,
+          block.args.numItems.value
+        );
+      } else if ("createSummary" in block.blockAction) {
+        // use result from previous block wherever {previousBlockResult} is found
+        const messages = block.args.messages.map((m: any) => {
+          if (m.content.includes("{previousBlockResult}")) {
+            if (block.id === undefined)
+              throw new Error("Block ID is undefined");
+            return {
+              role: m.role,
+              content: m.content.replace(
+                "{previousBlockResult}",
+                blocks[block.id - 1] ? blocks[block.id - 1].result?.output : ""
+              ),
+            };
+          }
+          return m;
+        });
+
+        result = await block.blockAction.createSummary.fn(
+          messages,
+          block.args.model,
+          services.find((s) => s.name === "OpenRouter")?.key,
+          block.id,
+          updateBlockResult
+        );
+      } else if ("createAudio" in block.blockAction) {
+        result = await block.blockAction.createAudio.fn(
+          block.args.text,
+          block.args.voiceId,
+          services.find((s) => s.name === "ElevenLabs")?.key,
+          block.id,
+          updateBlockResult
+        );
+      } 
+      else {
+        throw new Error("Unknown block action");
+      }
+      if (result) {
+        dispatch({
+          type: "UPDATE_BLOCK_RESULT",
+          id: block.id,
+          result: result,
+        });
+      }
+    }
+  }
+
   return (
-    <WorkflowContext.Provider value={{ blocks, running, runWorkflow }}>
+    <WorkflowContext.Provider value={{ blocks, running, runWorkflow, runBlock }}>
       <WorkflowDispatchContext.Provider value={dispatch}>
         {children}
       </WorkflowDispatchContext.Provider>
@@ -187,6 +256,7 @@ function workflowReducer(blocks: Block[], action: Action): Block[] {
         return block;
       });
     }
+    
     case "REMOVE_BLOCK": {
       return blocks.filter((block) => block.id !== action.id);
     }
@@ -291,7 +361,7 @@ const initialBlocks: Block[] = [
       voiceId: "EXAVITQu4vr4xnSDxMaL", // sarah
       ELEVENLABS_API_KEY: "",
     },
-    blockAction: null,
+    blockAction: { createAudio: { fn: createAudio } },
     result: null,
   },
 ];

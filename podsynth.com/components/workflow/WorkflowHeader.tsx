@@ -13,12 +13,15 @@ export default function WorkFlowHeader() {
   return (
     <>
       <div className="flex flex-row gap-2 items-center justify-between">
+        <div className="flex-grow">
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="font-semibold tracking-tight w-auto bg-white"
+          className="font-semibold tracking-tight pr-0"
           placeholder="Workflow"
         />
+        </div>
+
         <div className="h-[1px] flex-1 bg-gray-200" />
         <Button
           variant={"outline"}

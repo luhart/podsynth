@@ -92,7 +92,6 @@ export async function parseRssSource(sourceUrl: string, numItems: number) {
   return parsedData;
 }
 
-
 export async function createSummary(
   messages: ChatCompletionMessageParam[],
   model: string,
@@ -117,8 +116,8 @@ export async function createSummary(
   });
 
   const start = performance.now();
-  let result = '';
-  
+  let result = "";
+
   const stream = await openai.chat.completions.create({
     model: model,
     messages: messages,
@@ -126,7 +125,12 @@ export async function createSummary(
   });
   for await (const part of stream) {
     result += part.choices[0]?.delta?.content || "";
-    updateBlockResult(blockId, { output: result, status: "running", error: null, executionTime: performance.now() - start });
+    updateBlockResult(blockId, {
+      output: result,
+      status: "running",
+      error: null,
+      executionTime: performance.now() - start,
+    });
   }
   const end = performance.now();
 
@@ -148,4 +152,79 @@ export async function createSummary(
   // if result starts with '\n' remove it
   // replace all instances of '\n\n' with ' <break time="1.0s" /> '
   // return result.replace(/^\n/, "").replace(/\n\n/g, ' <break time="1.0s" /> ');
+}
+
+const ELEVEN_LABS_URL = "https://api.elevenlabs.io/v1/text-to-speech/";
+
+export async function createAudio(
+  text: string,
+  voiceId: string,
+  ELEVENLABS_API_KEY: string | undefined,
+  blockId: number,
+  updateBlockResult: (id: number, result: ResultType) => void
+): Promise<ResultType> {
+  if (!ELEVENLABS_API_KEY) {
+    return {
+      error: "Error creating audio: Missing ElevenLabs API Key",
+      output: null,
+      status: "error",
+      executionTime: 0,
+    };
+  }
+
+  if (!text) {
+    return {
+      error: "Error creating audio: No text input provided",
+      output: null,
+      status: "error",
+      executionTime: 0,
+    };
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    "xi-api-key": ELEVENLABS_API_KEY,
+  };
+
+  const body = {
+    model_id: "eleven_multilingual_v2",
+    text: text,
+    voice_settings: {
+      similarity_boost: 0.75,
+      stability: 0.5,
+    },
+  };
+
+  const start = performance.now();
+  const response = await fetch(`${ELEVEN_LABS_URL}${voiceId}`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error creating audio: ${response.statusText}`);
+  }
+
+  const blob = await response.blob();
+  const file = new File([blob], "audio.mp3", { type: "audio/mpeg" });
+
+  const end = performance.now();
+
+  const audioUrl = URL.createObjectURL(file);
+  if (!audioUrl) {
+    return {
+      error: "Error in Create Audio: No audio returned",
+      output: null,
+      status: "error",
+      executionTime: end - start,
+    };
+  }
+
+  return {
+    error: null,
+    output: audioUrl,
+    status: "complete",
+    executionTime: end - start,
+  };
 }

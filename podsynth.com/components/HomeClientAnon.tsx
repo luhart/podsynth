@@ -104,29 +104,6 @@ function HomeClientAnon() {
 
       <div className="flex flex-col gap-2">
         <div className="font-semibold tracking-tight">Services</div>
-        {/* service toggles */}
-        {/* <div className="flex flex-row gap-2 items-center justify-start flex-wrap">
-          {services.map((service) => (
-            <div key={service.name} className="flex flex-col gap-2">
-              <Button
-                size="sm"
-                className="rounded-full px-4 py-2"
-                onClick={() => {
-                  setServices((prev) =>
-                    prev.map((s) =>
-                      s.name === service.name
-                        ? { ...s, enabled: !s.enabled }
-                        : s
-                    )
-                  );
-                }}
-                variant={service.enabled ? "default" : "secondary"}
-              >
-                {service.name}
-              </Button>
-            </div>
-          ))}
-        </div> */}
         <ToggleGroup
           variant="outline"
           className="flex flex-row gap-1 items-center justify-start flex-wrap"
