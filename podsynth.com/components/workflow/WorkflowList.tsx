@@ -1,5 +1,5 @@
 import { Block, useWorkflow, useWorkflowDispatch } from "@/lib/WorkflowContext";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
@@ -89,8 +89,8 @@ export default function WorkflowList() {
   return (
     <ul className="flex flex-col gap-3">
       {blocks.map((block: any, index: number) => (
-        <>
-          <li key={block.id}>
+        <React.Fragment key={block.id}>
+          <li>
             <BlockContainer block={block}>
               {block.blockType === "rss" ? (
                 <RssBlockItem block={block} />
@@ -104,51 +104,47 @@ export default function WorkflowList() {
             </BlockContainer>
           </li>
           {index < blocks.length - 1 && (
-            <li className="flex justify-center">
-              <div className=" text-gray-600">↓</div>
+            <li className="flex justify-center" key={`separator-${block.id}`}>
+              <div className="text-gray-600">↓</div>
             </li>
           )}
-        </>
+        </React.Fragment>
       ))}
-      <>
-        {blocks.length === 0 ? (
-          <>
-            <div className="text-gray-600 text-center w-full px-4 py-24 rounded-xl border bg-white">
-              No blocks. Add a block to get started.
+      {blocks.length === 0 && (
+        <React.Fragment key="no-blocks">
+          <li className="text-gray-600 text-center w-full px-4 py-24 rounded-xl border bg-white">
+            No blocks. Add a block to get started.
+          </li>
+          <li><NewBlockCombobox /></li>
+        </React.Fragment>
+      )}
+      {blocks.length > 0 && (
+        <li className="w-full flex flex-row gap-3 mt-4" key="wf-actions">
+          <NewBlockCombobox />
+          <Button
+            onClick={async () => {
+              await runWorkflow();
+            }}
+            size="lg"
+            disabled={running}
+            className="flex flex-row justify-between flex-1"
+          >
+            <div className="w-[44px] xs:block hidden" />
+            <div className="flex flex-row items-center justify-center gap-2 xs:w-auto w-full">
+              Run{" "}
+              {running && <LoaderIcon className="animate-spin w-4 h-4" />}
             </div>
-            <NewBlockCombobox />
-          </>
-        ) : (
-          <>
-            <div className="w-full flex flex-row gap-3 mt-4">
-              <NewBlockCombobox />
-              <Button
-                onClick={async () => {
-                  await runWorkflow();
-                }}
-                size="lg"
-                disabled={running}
-                className="flex flex-row justify-between flex-1"
-              >
-                <div className="w-[44px] xs:block hidden" />
-                <div className="flex flex-row items-center justify-center gap-2 xs:w-auto w-full">
-                  Run{" "}
-                  {running && <LoaderIcon className="animate-spin w-4 h-4" />}
-                </div>
-
-                <div className="xs:flex item-center gap-1 hidden">
-                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
-                    ⌘
-                  </kbd>
-                  <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
-                    ↩
-                  </kbd>
-                </div>
-              </Button>
+            <div className="xs:flex item-center gap-1 hidden">
+              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
+                ⌘
+              </kbd>
+              <kbd className="pointer-events-none h-5 w-5 select-none flex items-center justify-center gap-1 rounded border border-b-2 bg-black font-mono text font-medium text-secondary opacity-100">
+                ↩
+              </kbd>
             </div>
-          </>
-        )}
-      </>
+          </Button>
+        </li>
+      )}
     </ul>
   );
 }
@@ -443,7 +439,7 @@ function LLMBlockItem({ block }: { block: Block }) {
               });
             }}
           >
-            Add instruction <Plus className="ml-1 w-4 h-4" />
+            Add message <Plus className="ml-1 w-4 h-4" />
           </Button>
         </div>
         <div className="flex flex-col gap-1 px-4">
@@ -672,7 +668,7 @@ function BlockContainer({
     >
       {children}
       <div
-        className={`absolute bottom-0 -right-3 transform -translate-x-1/4 translate-y-1/2 flex gap-2 bg-white rounded-lg border py-1 px-1 transition-all duration-150 ${showButtons ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
+        className={`absolute bottom-0 -right-3 transform -translate-x-1/4 translate-y-1/2 flex gap-1 bg-white rounded-lg border py-1 px-1 transition-all duration-150 ${showButtons ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}
       >
         <Button
           variant={"ghost"}

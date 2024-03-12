@@ -18,7 +18,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { createAudio, rssUtilityBlockFunction } from "@/lib/block-functions";
+import { createAudio, createSummary, rssUtilityBlockFunction } from "@/lib/block-functions";
 import { useWorkflow, useWorkflowDispatch } from "@/lib/WorkflowContext";
 import { Plus } from "lucide-react";
 
@@ -75,6 +75,8 @@ const blockOptions: NewBlockOptions[] = [
         model: "mistralai/mixtral-8x7b-instruct",
         OPENROUTER_API_KEY: "",
       },
+      blockAction: { createSummary: { fn: createSummary } },
+      result: null,
     },
   },
   {
