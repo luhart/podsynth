@@ -19,26 +19,26 @@ export const servicesAtom = atomWithStorage("services", [
     key: "",
     enabled: true,
   },
-  {
-    name: "OpenAI",
-    key: "",
-    enabled: false,
-  },
-  {
-    name: "perplexity",
-    key: "",
-    enabled: false,
-  },
-  {
-    name: "neets",
-    key: "",
-    enabled: false,
-  },
-  {
-    name: "PlayHT",
-    key: "",
-    enabled: false,
-  },
+  // {
+  //   name: "OpenAI",
+  //   key: "",
+  //   enabled: false,
+  // },
+  // {
+  //   name: "perplexity",
+  //   key: "",
+  //   enabled: false,
+  // },
+  // {
+  //   name: "neets",
+  //   key: "",
+  //   enabled: false,
+  // },
+  // {
+  //   name: "PlayHT",
+  //   key: "",
+  //   enabled: false,
+  // },
 ]);
 
 const servicesNotImplemented = ["OpenAI", "perplexity", "neets", "PlayHT"];
