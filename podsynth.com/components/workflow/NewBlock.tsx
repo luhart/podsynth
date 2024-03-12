@@ -106,7 +106,7 @@ export function NewBlockCombobox() {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button size="lg" variant="outline">
+          <Button size="lg" variant="outline" className="w-full">
             Add block <Plus className="ml-1 w-4 h-4" />
           </Button>
         </PopoverTrigger>
@@ -120,7 +120,7 @@ export function NewBlockCombobox() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button size="lg" variant="outline">
+        <Button size="lg" variant="outline" className="w-full">
           Add block <Plus className="ml-1 w-4 h-4" />
         </Button>
       </DrawerTrigger>
