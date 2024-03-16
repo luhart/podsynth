@@ -1,7 +1,6 @@
 "use client";
 
-import * as React from "react";
-
+import { useState } from "react";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
@@ -99,7 +98,7 @@ const blockOptions: NewBlockOptions[] = [
 ];
 
 export function NewBlockCombobox() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (isDesktop) {

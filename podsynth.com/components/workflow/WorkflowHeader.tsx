@@ -11,52 +11,30 @@ export default function WorkFlowHeader() {
   const [title, setTitle] = useState("RSS → Audio Summary");
 
   return (
-    <>
-      <div className="flex flex-row gap-2 items-center justify-between">
-        <div className="flex-grow">
+    <div className="flex flex-row gap-2 items-center justify-between">
+      <div className="flex-grow">
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="font-semibold tracking-tight pr-0"
           placeholder="Workflow"
         />
-        </div>
-
-        <div className="h-[1px] flex-1 bg-gray-200" />
-        <Button
-          variant={"outline"}
-          size={"sm"}
-          disabled={!blocks || blocks.length === 0}
-          onClick={() => {
-            setTitle("");
-            dispatch({
-              type: "RESET_WORKFLOW",
-            });
-          }}
-        >
-          Reset
-        </Button>
-        {/* <CommandDialogDemo /> */}
       </div>
-      {/* <Input
-        placeholder="Add task"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      /> */}
-      {/* <Button
+
+      <div className="h-[1px] flex-1 bg-gray-200" />
+      <Button
+        variant={"outline"}
+        size={"sm"}
+        disabled={!blocks || blocks.length === 0}
         onClick={() => {
-          setText("");
+          setTitle("");
           dispatch({
-            type: "ADD_BLOCK",
-            id: nextId++,
-            text: text,
+            type: "RESET_WORKFLOW",
           });
         }}
       >
-        Add
-      </Button> */}
-    </>
+        Reset
+      </Button>
+    </div>
   );
 }
-
-let nextId = 3;

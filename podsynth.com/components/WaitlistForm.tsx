@@ -20,10 +20,8 @@ export default function WaitlistForm() {
     setLoading(true);
     try {
       const { error } = await supabase
-      .from('waitlist')
-      .insert([
-        { email, message },
-      ])
+        .from("waitlist")
+        .insert([{ email, message }]);
       setSubmitted(true);
     } catch (error) {
       console.error("Error submitting waitlist form", error);

@@ -361,31 +361,3 @@ const initialBlocks: Block[] = [
     result: null,
   },
 ];
-
-const initialWorkflowMetadata = {
-  name: "RSS to Audio Summary",
-  description:
-    "This initial example grabs recent items from an RSS feed and creates an audio digest. It uses OpenRouter to create a summary of the items and ElevenLabs to generate the audio.",
-};
-
-const initialWorkflow = {
-  name: "RSS to Audio Summary",
-  description:
-    "This initial example grabs recent items from an RSS feed and creates an audio digest. It uses OpenRouter to create a summary of the items and ElevenLabs to generate the audio.",
-  blocks: [
-    {
-      name: "Parse RSS feed",
-      type: "utility",
-      args: [
-        { label: "source", type: "text" },
-        { label: "numItems", type: "number", min: 1, max: 10 },
-      ],
-      result: {
-        executionTime: 324,
-        output: "This is the RSS utiltiy block output",
-        error: null,
-      },
-    },
-  ],
-  finalResult: "",
-};

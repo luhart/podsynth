@@ -179,6 +179,7 @@ const ServiceItem = ({ label, value, setValue }: ServiceItemProps) => {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={`Enter ${label} API key`}
+        type="password"
       />
     </div>
   );

@@ -61,7 +61,6 @@ export async function rssUtilityBlockFunction(
 }
 
 const MAX_CHARS_PARSED = 3500;
-// takes in rss feed url and returns a string which will be used to create a summary
 export async function parseRssSource(sourceUrl: string, numItems: number) {
   const res = await fetch("api/rss-fetch", {
     method: "POST",

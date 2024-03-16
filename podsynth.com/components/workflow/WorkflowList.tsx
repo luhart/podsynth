@@ -709,10 +709,6 @@ function BlockHeader({ block }: { block: Block }) {
         </div>
         <div className="text-gray-600 text-sm">{block.description}</div>
       </div>
-
-      {/* <Button size="sm" variant="ghost" disabled={disabled}>
-        Edit
-      </Button> */}
     </div>
   );
 }
